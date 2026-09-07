@@ -1,0 +1,21 @@
+# Large binaries and archives
+ffmpeg.zip
+*.zip
+*.tar.gz
+*.rar
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Environment files
+.env
+.env.local
+
+# Python / Node caches (if backend or node tooling added later)
+__pycache__/
+*.py[cod]
+node_modules/
