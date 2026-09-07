@@ -1,0 +1,586 @@
+/* =========================================================
+   Apple Design Language - Light Theme with ~30% Pink Accent
+   ========================================================= */
+
+:root {
+  /* Apple System Palette (Light Mode) */
+  --bg-primary: #FBFBFD;
+  --bg-secondary: #F5F5F7;
+  --card-bg: rgba(255, 255, 255, 0.60);
+  --card-border: rgba(0, 0, 0, 0.06);
+  --card-border-hover: rgba(255, 45, 85, 0.28);
+
+  /* Primary Pink Accents (~30% visual presence) */
+  --pink-primary: #FF2D55;
+  --pink-hover: #E0264A;
+  --pink-soft: #FFF0F3;
+  --pink-tint: rgba(255, 45, 85, 0.08);
+  --pink-gradient: linear-gradient(135deg, #FF375F 0%, #FF6482 100%);
+  --pink-glow: rgba(255, 45, 85, 0.16);
+
+  /* Typography Colors */
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-tertiary: #86868B;
+  --text-light: #FFFFFF;
+
+  /* Typography Font Stack */
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", "Helvetica Neue", sans-serif;
+
+  /* Elevation Shadows */
+  --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 24px 50px rgba(255, 45, 85, 0.14), 0 4px 12px rgba(0, 0, 0, 0.03);
+
+  /* Squarcle Radii */
+  --radius-big-squarcle: 34px;
+  --radius-rect-squarcle: 22px;
+  --radius-pill: 9999px;
+
+  /* Apple Spring Animation Curves */
+  --transition-apple: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+  line-height: 1.5;
+}
+
+/* Full-screen scroll-scrub video backdrop */
+#backdrop-video {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  object-fit: cover;
+  /* Scrubbing is handled by JS — no autoplay */
+}
+
+
+/* Minor Grain Texture Overlay (Heavier grain: ~120% visibility, crisp matte texture) */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.082;
+  /* Increased from 0.045 (~120% heavier) */
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* App Viewport Container */
+.app-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 2;
+}
+
+
+
+/* Screen Section Transitions */
+.screen-section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(100vh);
+  transition: var(--transition-apple);
+}
+
+/* Active Section State */
+.screen-section.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Exit State: Scroll Up from the screen */
+.screen-section.exit-up {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-100vh);
+}
+
+/* =========================================================
+   1. Welcome Greeting Section (Apple Typography & Spacing)
+   Left Placeholders + Right Circular Dial Scroll
+   ========================================================= */
+
+
+/* Circular Scroll Greeting Dial — fills the welcome section */
+.circular-dial-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: auto;
+  z-index: 4;
+}
+
+/* We don't really need the track as a separate element anymore.
+   Keep it for DOM structure but make it transparent. */
+.circular-track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+  Each dial-item spans the full width of the container, with text centered.
+  At rotate(0°), the text sits dead center horizontally.
+  
+  The rotation pivot (transform-origin) is set to:
+    x = 50% (horizontal center of the element = viewport center)
+    y = calc(50vh + 3200px) — far BELOW the element
+  
+  Wait — that would create a vertical arc. We want a horizontal arc
+  with the pivot far to the RIGHT. Let me reconsider.
+  
+  For a pivot to the RIGHT of the viewport:
+    x = calc(50% + 3200px) — 3200px to the right of the element center
+    y = 50% — vertically centered on the element
+    
+  At rotate(0°): text is at its natural position = centered in the element = viewport center. ✓
+  At rotate(5°): text rotates clockwise around a point 3200px to its right,
+    which swings it downward and slightly left. The arc is gentle because 3200px is huge. ✓
+  At rotate(-5°): text swings upward. ✓
+  
+  This is exactly what we want!
+*/
+.dial-item {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  /* Vertically centered in the container */
+  width: 100%;
+  text-align: center;
+  transform-origin: calc(50% + 3200px) 50%;
+  white-space: nowrap;
+  pointer-events: none;
+
+  /* Text Styling */
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  will-change: transform, opacity;
+}
+
+/* Scroll Down Prompt — centered in viewport, with bounce animation */
+.scroll-prompt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.scroll-prompt.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-prompt-text {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(29, 29, 31, 0.45);
+}
+
+.scroll-prompt-icon {
+  animation: scrollBounce 2s ease-in-out infinite;
+  color: rgba(29, 29, 31, 0.35);
+}
+
+.scroll-prompt-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+@keyframes scrollBounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   2. Options Section: Three Big Squarcles + Secondary Rows
+   ========================================================= */
+
+.options-container {
+  width: 100%;
+  max-width: 1140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.2rem;
+}
+
+.section-header {
+  text-align: center;
+}
+
+.subheading-tag {
+  color: var(--pink-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-light);
+}
+
+/* The Three Big Squarcles in the Center */
+.big-squarcles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.8rem;
+  width: 100%;
+}
+
+/* Base Squarcle Styling */
+.squarcle-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: var(--transition-apple);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Hover effects for Squarcles */
+.squarcle-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--card-border-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.squarcle-card:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+/* Big Squarcle Dimensions & Layout */
+.big-squarcle {
+  border-radius: var(--radius-big-squarcle);
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-height: 330px;
+  justify-content: space-between;
+}
+
+.card-icon-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background-color: var(--pink-soft);
+  color: var(--pink-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.big-squarcle:hover .card-icon-badge {
+  background: var(--pink-gradient);
+  color: var(--text-light);
+  transform: scale(1.06);
+}
+
+.card-content {
+  margin-top: 1.5rem;
+  flex-grow: 1;
+}
+
+.card-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+  color: var(--text-primary);
+}
+
+.card-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-action-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--pink-primary);
+}
+
+.arrow-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--pink-soft);
+  color: var(--pink-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: var(--transition-fast);
+}
+
+.big-squarcle:hover .arrow-circle {
+  background-color: var(--pink-primary);
+  color: var(--text-light);
+  transform: translateX(4px);
+}
+
+/* Smaller Rectangular Squarcles */
+.secondary-squarcles-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 920px;
+}
+
+.rect-squarcle {
+  border-radius: var(--radius-rect-squarcle);
+  padding: 1.4rem 1.8rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.rect-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background-color: var(--pink-soft);
+  color: var(--pink-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+}
+
+.rect-squarcle:hover .rect-badge {
+  background-color: var(--pink-primary);
+  color: var(--text-light);
+}
+
+.rect-text {
+  flex-grow: 1;
+}
+
+.rect-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.2rem;
+}
+
+.rect-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.rect-arrow {
+  font-size: 1.2rem;
+  color: var(--text-tertiary);
+  transition: var(--transition-fast);
+}
+
+.rect-squarcle:hover .rect-arrow {
+  color: var(--pink-primary);
+  transform: translateX(4px);
+}
+
+/* Secondary Link Button */
+.secondary-link-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-pill);
+  transition: var(--transition-fast);
+}
+
+.secondary-link-btn:hover {
+  color: var(--pink-primary);
+  background-color: var(--pink-soft);
+}
+
+/* =========================================================
+   3. Page Status / Confirmation View
+   ========================================================= */
+
+.status-card {
+  max-width: 540px;
+  width: 100%;
+  border-radius: var(--radius-big-squarcle);
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.status-icon-pill {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background-color: var(--pink-soft);
+  color: var(--pink-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  border: 1px solid rgba(255, 45, 85, 0.2);
+}
+
+.status-badge-text {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--pink-primary);
+}
+
+.status-title {
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.status-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.back-pill-btn {
+  margin-top: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.8rem;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.back-pill-btn:hover {
+  background-color: var(--pink-soft);
+  color: var(--pink-primary);
+  border-color: rgba(255, 45, 85, 0.3);
+  transform: translateX(-3px);
+}
+
+/* =========================================================
+   Responsive Breakpoints
+   ========================================================= */
+
+@media (max-width: 960px) {
+  .big-squarcles-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .big-squarcle {
+    min-height: auto;
+    padding: 1.8rem 1.6rem;
+  }
+
+  .secondary-squarcles-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .options-container {
+    overflow-y: auto;
+    max-height: 85vh;
+    padding-bottom: 2rem;
+  }
+}
