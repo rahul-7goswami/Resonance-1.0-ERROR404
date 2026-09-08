@@ -66,3 +66,10 @@ When the backend calls Gemini, it returns a structured JSON model. This enables 
 | :--- | :--- | :--- |
 | **Backend & AI Pipeline** *(e.g., User or Rahul)* | **FastAPI + Gemini Prompt Engine** | • FastAPI setup (`app.py`) with CORS & static file serving.<br>• Gemini 1.5/2.0 Flash prompt engineering with structured Pydantic schemas.<br>• Fallback pre-calculated scenario mocks (ensures the demo never crashes even if offline or rate-limited). |
 | **Frontend & UI/UX** *(e.g., User or Rahul)* | **Interactive Dashboard & Visualization** | • Premium dark-mode UI with glassmorphism, glowing accents, and typography.<br>• Domain wizard cards + intake form with dynamic chips/tags.<br>• Chart.js Radar chart integration comparing 3 scenarios simultaneously.<br>• Dynamic sensitivity sliders that recalculate metric weights live on the canvas. |
+
+
+## 6. Git Push
+
+**terminal**
+> git commit -m "Refactor front page: rename styles and scripts, remove button placeholders"
+> git push origin main

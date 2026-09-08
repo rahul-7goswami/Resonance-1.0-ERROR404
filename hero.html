@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resonance — Decision Simulation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Full-screen scroll-scrub video backdrop -->
+  <video id="backdrop-video" src="Backdrop_video_3.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- Main Container -->
+  <main class="app-viewport">
+
+    <!-- Section 1: Welcome Greeting -->
+    <section id="welcome-section" class="screen-section active">
+
+
+      <!-- Right Side: Circular Scroll Greeting Dial -->
+      <div class="circular-dial-container" id="dial-container">
+        <!-- Radial Text Items along the circular path -->
+        <div class="circular-track" id="circular-track">
+          <div class="dial-item" data-index="0">Hello!</div>
+          <div class="dial-item" data-index="1">What are</div>
+          <div class="dial-item" data-index="2">we thinking</div>
+          <div class="dial-item" data-index="3">Today?</div>
+        </div>
+      </div>
+
+      <!-- Scroll Down Prompt -->
+      <div id="scroll-prompt" class="scroll-prompt">
+        <span class="scroll-prompt-text">Scroll</span>
+        <div class="scroll-prompt-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="7 13 12 18 17 13"></polyline>
+            <polyline points="7 6 12 11 17 6"></polyline>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Three Main Squarcles & Rectangular Philosophy Squarcles -->
+    <section id="options-section" class="screen-section options-backdrop">
+      <div class="options-container">
+        <header class="section-header">
+          <span class="subheading-tag">Select Your Domain</span>
+          <h2 class="section-title">Where would you like to direct your focus?</h2>
+        </header>
+
+        <!-- The Three Big Squarcles in the Center -->
+        <div class="big-squarcles-grid">
+          <!-- Business Card -->
+          <article class="squarcle-card big-squarcle" data-page="Business">
+            <div class="card-icon-badge">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="3" ry="3"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Business</h3>
+              <p class="card-desc">For companies and enterprises optimizing expansion, runway, capital spend, and
+                operations.</p>
+            </div>
+            <div class="card-footer">
+              <span class="card-action-label">Open Domain</span>
+              <span class="arrow-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </article>
+
+          <!-- Finance Card -->
+          <article class="squarcle-card big-squarcle" data-page="Finance">
+            <div class="card-icon-badge">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8.5 7h7"></path>
+                <path d="M8.5 10.2h7"></path>
+                <path d="M8.5 13.4h2"></path>
+                <path d="M10.5 13.4l4.8 4"></path>
+                <path d="M10.5 13.4c3.8 0 3.8-6.4 0-6.4"></path>
+              </svg>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Finance</h3>
+              <p class="card-desc">For personal financial strategies, major asset purchases, loans, and long-term
+                allocations.</p>
+            </div>
+            <div class="card-footer">
+              <span class="card-action-label">Open Domain</span>
+              <span class="arrow-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </article>
+
+          <!-- Life Card -->
+          <article class="squarcle-card big-squarcle" data-page="Life">
+            <div class="card-icon-badge">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Life</h3>
+              <p class="card-desc">For high-stakes life decisions needing guidance beyond finance—education, relocation,
+                and career pivots.</p>
+            </div>
+            <div class="card-footer">
+              <span class="card-action-label">Open Domain</span>
+              <span class="arrow-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </article>
+        </div>
+
+        <!-- Smaller Rectangular Squarcles (Philosophy & Purpose) -->
+        <div class="secondary-squarcles-row">
+          <!-- Philosophy -->
+          <article class="squarcle-card rect-squarcle" data-page="Philosophy of the Project">
+            <div class="rect-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                </path>
+              </svg>
+            </div>
+            <div class="rect-text">
+              <h4 class="rect-title">Philosophy of the Project</h4>
+              <p class="rect-desc">Simulating multi-scenario trade-offs instead of relying on static intuition.</p>
+            </div>
+            <span class="rect-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </article>
+
+          <!-- Reason behind creation -->
+          <article class="squarcle-card rect-squarcle" data-page="Reason Behind Creation">
+            <div class="rect-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4"></path>
+                <path d="M12 18v4"></path>
+                <path d="M4.93 4.93l2.83 2.83"></path>
+                <path d="M16.24 16.24l2.83 2.83"></path>
+                <path d="M2 12h4"></path>
+                <path d="M18 12h4"></path>
+                <path d="M4.93 19.07l2.83-2.83"></path>
+                <path d="M16.24 7.76l2.83-2.83"></path>
+              </svg>
+            </div>
+            <div class="rect-text">
+              <h4 class="rect-title">The Reason Behind Its Creation</h4>
+              <p class="rect-desc">Democratizing high-stakes decision intelligence for individuals and founders.</p>
+            </div>
+            <span class="rect-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </article>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script src="hero.js"></script>
+</body>
+
+</html>
