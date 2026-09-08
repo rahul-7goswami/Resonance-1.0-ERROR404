@@ -1,0 +1,5 @@
+@view-transition { navigation: auto; }
+::view-transition-old(root){animation:dflow-page-up 1200ms cubic-bezier(.7,0,.2,1) both;z-index:2}
+::view-transition-new(root){animation:none;mix-blend-mode:normal;z-index:1}
+@keyframes dflow-page-up{to{transform:translateY(-100%);opacity:0}}
+@media(prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}

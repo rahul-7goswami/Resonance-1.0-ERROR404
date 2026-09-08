@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario Intelligence — Finance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Scenario Intelligence</span>
+    </div>
+    <div class="progress-rail" id="progressRail" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" aria-label="Simulation progress">
+      <div class="progress-step" data-step="1"><span>01</span>Domains</div>
+      <div class="progress-step" data-step="2"><span>02</span>Ranges</div>
+      <div class="progress-step" data-step="3"><span>03</span>Review</div>
+      <div class="progress-step" data-step="4"><span>04</span>Results</div>
+    </div>
+  </header>
+
+  <main id="main" aria-live="polite">
+
+    <!-- STEP 1: DOMAIN INPUT -->
+    <section class="view" id="view-1" data-view="1">
+      <div class="view-inner narrow">
+        <h1>Finance</h1>
+        <p class="lede">Define the financial domains you want to simulate. Add every decision you're weighing — a purchase, an investment, your monthly income — and we'll model how they interact.</p>
+
+        <form id="domainForm" class="domain-form" autocomplete="off">
+          <label for="domainInput" class="sr-only">Financial domain name</label>
+          <input type="text" id="domainInput" name="domain" placeholder="e.g. Purchase, Investment, Monthly Income" maxlength="60">
+          <button type="submit" class="btn btn-primary" id="addDomainBtn">+ Add domain</button>
+        </form>
+        <p class="field-error" id="domainError" role="alert" aria-live="assertive"></p>
+
+        <div class="suggestions" id="suggestions" aria-label="Suggested domains"></div>
+
+        <ul class="domain-list" id="domainList" aria-label="Added financial domains"></ul>
+
+        <div class="empty-state" id="emptyState">
+          <p>No domains yet. Add your first one above — try "Purchase" or "Savings".</p>
+        </div>
+
+        <div class="view-actions">
+          <span class="hint" id="domainCountHint">0 domains added</span>
+          <button type="button" class="btn btn-accent" id="toStep2Btn" disabled>Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: RANGE CONFIGURATION -->
+    <section class="view" id="view-2" data-view="2" hidden>
+      <div class="view-inner">
+        <h1>Define your financial ranges</h1>
+        <p class="lede">Set a minimum for each domain. The ceiling is calculated automatically at 1000× your minimum, then use the slider to pick the scenario value you want simulated.</p>
+
+        <div class="range-cards" id="rangeCards"></div>
+
+        <div class="view-actions">
+          <button type="button" class="btn btn-ghost" id="backTo1Btn">← Back</button>
+          <button type="button" class="btn btn-accent" id="toStep3Btn">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: REVIEW / CONFIRM -->
+    <section class="view" id="view-3" data-view="3" hidden>
+      <div class="view-inner narrow">
+        <h1>Review your scenario</h1>
+        <p class="lede">Confirm the values below. Once confirmed, we'll run the scenario through the decision engine.</p>
+
+        <div class="review-list" id="reviewList"></div>
+
+        <div class="view-actions">
+          <button type="button" class="btn btn-ghost" id="backTo2Btn">← Edit</button>
+          <button type="button" class="btn btn-accent" id="confirmBtn">Confirm scenario →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIMULATION OVERLAY -->
+    <div class="sim-overlay" id="simOverlay" hidden role="status" aria-live="polite">
+      <div class="sim-box">
+        <div class="sim-spinner" aria-hidden="true"></div>
+        <p class="sim-line" id="simLine">Analyzing financial relationships…</p>
+      </div>
+    </div>
+
+    <!-- STEP 4: RESULTS DASHBOARD -->
+    <section class="view" id="view-4" data-view="4" hidden>
+      <div class="view-inner">
+        <h1>Scenario Intelligence</h1>
+        <p class="lede">Most feasible and sustainable outcomes for the scenario you defined.</p>
+        <p class="disclaimer">Simulated scenario — not financial advice. Scores are illustrative, based only on the ranges you entered.</p>
+
+        <div class="best-panel" id="bestPanel"></div>
+
+        <h2 class="section-heading">Ranked outcomes</h2>
+        <div class="outcome-grid" id="outcomeGrid"></div>
+
+        <h2 class="section-heading">Why this scenario?</h2>
+        <div class="explain-box" id="explainBox"></div>
+
+        <h2 class="section-heading">Your inputs</h2>
+        <div class="input-summary" id="inputSummary"></div>
+
+        <div class="view-actions">
+          <button type="button" class="btn btn-ghost" id="modifyBtn">Modify scenario</button>
+          <button type="button" class="btn btn-outline" id="resetBtn">Start over</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

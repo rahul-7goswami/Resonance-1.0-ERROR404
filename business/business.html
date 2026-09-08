@@ -1,1078 +1,191 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finance — Resonance</title>
-  <style>
-    /* =========================================================
-   Shared tokens — copied from the Resonance homepage stylesheet
-   so this page renders as the same design system.
-   ========================================================= */
-    :root {
-      --bg-primary: #FBFBFD;
-      --bg-secondary: #F5F5F7;
-      --card-bg: rgba(255, 255, 255, 0.60);
-      --card-border: rgba(0, 0, 0, 0.06);
-      --card-border-hover: rgba(255, 45, 85, 0.28);
-
-      --pink-primary: #FF2D55;
-      --pink-hover: #E0264A;
-      --pink-soft: #FFF0F3;
-      --pink-tint: rgba(255, 45, 85, 0.08);
-      --pink-gradient: linear-gradient(135deg, #FF375F 0%, #FF6482 100%);
-      --pink-glow: rgba(255, 45, 85, 0.16);
-
-      --text-primary: #1D1D1F;
-      --text-secondary: #6E6E73;
-      --text-tertiary: #86868B;
-      --text-light: #FFFFFF;
-
-      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", "Helvetica Neue", sans-serif;
-
-      --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.04);
-      --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
-      --shadow-card-hover: 0 24px 50px rgba(255, 45, 85, 0.14), 0 4px 12px rgba(0, 0, 0, 0.03);
-
-      --radius-big-squarcle: 34px;
-      --radius-rect-squarcle: 22px;
-      --radius-pill: 9999px;
-
-      --transition-apple: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-      --transition-fast: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body {
-      font-family: var(--font-family);
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      overflow-x: hidden;
-      min-height: 100vh;
-      line-height: 1.5;
-    }
-
-    .grain-overlay {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.05;
-      mix-blend-mode: overlay;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    }
-
-    .app-viewport {
-      position: relative;
-      width: 100vw;
-      min-height: 100vh;
-      overflow: hidden;
-      z-index: 2;
-    }
-
-    /* Screen transitions — same choreography as the homepage's screen-section */
-    .screen-section {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 5rem 2rem 4rem;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(100vh);
-      transition: var(--transition-apple);
-      overflow-y: auto;
-    }
-
-    .screen-section.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-      position: relative;
-    }
-
-    .screen-section.exit-up {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-100vh);
-    }
-
-    .screen-section.pre-enter {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(100vh);
-    }
-
-    .page-container {
-      width: 100%;
-      max-width: 720px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.6rem;
-    }
-
-    /* Header */
-    .finance-header {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.4rem;
-    }
-
-    .subheading-tag {
-      color: var(--pink-primary);
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.3rem;
-      display: block;
-    }
-
-    .section-title {
-      font-size: clamp(1.7rem, 3.2vw, 2.3rem);
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      color: var(--text-primary);
-    }
-
-    .section-desc {
-      font-size: 0.98rem;
-      color: var(--text-secondary);
-      max-width: 52ch;
-      margin-top: 0.5rem;
-      line-height: 1.5;
-    }
-
-    /* Pill tab steps */
-    .step-tabs {
-      display: flex;
-      gap: 0.4rem;
-      background: var(--bg-secondary);
-      padding: 0.35rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid var(--card-border);
-    }
-
-    .step-tab {
-      border: none;
-      background: none;
-      font-family: inherit;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-tertiary);
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-
-    .step-tab.active {
-      background: var(--text-light);
-      color: var(--pink-primary);
-      box-shadow: var(--shadow-subtle);
-    }
-
-    .step-tab:disabled {
-      cursor: not-allowed;
-      opacity: 0.4;
-    }
-
-    .step-tab:not(:disabled):not(.active):hover {
-      color: var(--text-primary);
-    }
-
-    /* Squarcle-style list rows (resources, stop-loss, scenarios, comparison) */
-    .list-stack {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-    }
-
-    .rect-squarcle {
-      background: var(--card-bg);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--shadow-card);
-      border-radius: var(--radius-rect-squarcle);
-      padding: 1.2rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1.1rem;
-      transition: var(--transition-apple);
-    }
-
-    .rect-squarcle:hover {
-      border-color: var(--card-border-hover);
-      box-shadow: var(--shadow-card-hover);
-      transform: translateY(-3px);
-    }
-
-    .rect-badge {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background-color: var(--pink-soft);
-      color: var(--pink-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-weight: 700;
-      font-size: 1.05rem;
-      transition: var(--transition-fast);
-    }
-
-    .rect-squarcle:hover .rect-badge {
-      background: var(--pink-gradient);
-      color: var(--text-light);
-    }
-
-    .rect-text {
-      flex-grow: 1;
-      min-width: 0;
-    }
-
-    .rect-title {
-      font-size: 1.02rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
-    }
-
-    .rect-desc {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      margin-top: 0.15rem;
-    }
-
-    .rect-value {
-      font-variant-numeric: tabular-nums;
-      font-weight: 700;
-      color: var(--pink-primary);
-      white-space: nowrap;
-      font-size: 1rem;
-    }
-
-    .icon-remove {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--text-tertiary);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      transition: var(--transition-fast);
-      flex-shrink: 0;
-    }
-
-    .icon-remove:hover {
-      background: var(--pink-soft);
-      color: var(--pink-primary);
-    }
-
-    .empty-state {
-      width: 100%;
-      text-align: center;
-      padding: 2.4rem 1rem;
-      color: var(--text-tertiary);
-      font-size: 0.92rem;
-      background: var(--bg-secondary);
-      border-radius: var(--radius-rect-squarcle);
-      border: 1px dashed var(--card-border);
-    }
-
-    /* Inputs */
-    .field-group {
-      width: 100%;
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      align-items: flex-end;
-    }
-
-    .field {
-      flex: 1;
-      min-width: 180px;
-    }
-
-    .field label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.4rem;
-    }
-
-    .field input,
-    .field textarea {
-      width: 100%;
-      font-family: inherit;
-      font-size: 0.95rem;
-      color: var(--text-primary);
-      background: var(--bg-secondary);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 0.75rem 1rem;
-      transition: var(--transition-fast);
-    }
-
-    .field input:focus,
-    .field textarea:focus {
-      outline: none;
-      border-color: var(--pink-primary);
-      box-shadow: 0 0 0 4px var(--pink-tint);
-    }
-
-    .field input[type=number] {
-      text-align: right;
-    }
-
-    /* Buttons */
-    .pill-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.85rem 1.6rem;
-      font-family: inherit;
-      font-size: 0.92rem;
-      font-weight: 600;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: var(--transition-fast);
-      white-space: nowrap;
-    }
-
-    .pill-btn.primary {
-      background: var(--pink-gradient);
-      color: var(--text-light);
-      box-shadow: 0 8px 20px var(--pink-glow);
-    }
-
-    .pill-btn.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 26px var(--pink-glow);
-    }
-
-    .pill-btn.primary:disabled {
-      background: var(--bg-secondary);
-      color: var(--text-tertiary);
-      box-shadow: none;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .pill-btn.ghost {
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border-color: var(--card-border);
-    }
-
-    .pill-btn.ghost:hover {
-      background: var(--pink-soft);
-      color: var(--pink-primary);
-      border-color: rgba(255, 45, 85, 0.3);
-    }
-
-    .secondary-link-btn {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-family: inherit;
-      font-size: 0.9rem;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      cursor: pointer;
-      padding: 0.4rem 1rem;
-      border-radius: var(--radius-pill);
-      transition: var(--transition-fast);
-    }
-
-    .secondary-link-btn:hover {
-      color: var(--pink-primary);
-      background-color: var(--pink-soft);
-    }
-
-    .add-resource-card {
-      width: 100%;
-      background: var(--bg-secondary);
-      border: 1px dashed var(--card-border);
-      border-radius: var(--radius-rect-squarcle);
-      padding: 1.3rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-    }
-
-    .actions-row {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.4rem;
-    }
-
-    /* Sliders */
-    .slider-card {
-      width: 100%;
-      background: var(--card-bg);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--shadow-card);
-      border-radius: var(--radius-rect-squarcle);
-      padding: 1.3rem 1.5rem;
-    }
-
-    .slider-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 0.9rem;
-    }
-
-    .slider-top .name {
-      font-weight: 600;
-      font-size: 0.98rem;
-    }
-
-    .slider-top .amt {
-      font-variant-numeric: tabular-nums;
-      font-weight: 700;
-      color: var(--pink-primary);
-    }
-
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 4px;
-      background: var(--bg-secondary);
-      border-radius: 4px;
-      outline: none;
-    }
-
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--text-light);
-      border: 3px solid var(--pink-primary);
-      box-shadow: var(--shadow-subtle);
-      cursor: pointer;
-      margin-top: -8px;
-    }
-
-    input[type=range]::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--text-light);
-      border: 3px solid var(--pink-primary);
-      cursor: pointer;
-    }
-
-    input[type=range]::-webkit-slider-runnable-track {
-      height: 4px;
-      background: var(--bg-secondary);
-      border-radius: 4px;
-    }
-
-    .range-bounds {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-tertiary);
-      margin-top: 0.6rem;
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* Scenario status cards */
-    .status-pill {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 0.3rem 0.7rem;
-      border-radius: var(--radius-pill);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      flex-shrink: 0;
-    }
-
-    .status-pill.pending {
-      background: var(--pink-soft);
-      color: var(--pink-primary);
-    }
-
-    .status-pill.completed {
-      background: #E8F7EE;
-      color: #1E8E4C;
-    }
-
-    .status-pill.error {
-      background: #FDEDEB;
-      color: #C0392B;
-    }
-
-    .scenario-body {
-      width: 100%;
-    }
-
-    .scenario-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-
-    .scenario-summary {
-      font-size: 0.86rem;
-      color: var(--text-secondary);
-      margin-top: 0.6rem;
-      line-height: 1.5;
-    }
-
-    .scenario-metrics {
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.7rem;
-      font-size: 0.8rem;
-      font-variant-numeric: tabular-nums;
-      flex-wrap: wrap;
-    }
-
-    .scenario-metrics b {
-      font-weight: 700;
-    }
-
-    .metric-up {
-      color: #1E8E4C;
-    }
-
-    .metric-down {
-      color: var(--pink-primary);
-    }
-
-    .spinner {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border: 2px solid rgba(255, 45, 85, 0.25);
-      border-top-color: var(--pink-primary);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Comparison */
-    .compare-card {
-      width: 100%;
-      background: var(--card-bg);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--shadow-card);
-      border-radius: var(--radius-big-squarcle);
-      padding: 1.8rem 2rem;
-      transition: var(--transition-apple);
-    }
-
-    .compare-card.recommended {
-      border-color: var(--card-border-hover);
-      box-shadow: var(--shadow-card-hover);
-      background: linear-gradient(180deg, var(--pink-tint) 0%, var(--card-bg) 60%);
-    }
-
-    .compare-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-
-    .compare-top .sname {
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-
-    .compare-top .score {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--pink-primary);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .bar-track {
-      height: 8px;
-      background: var(--bg-secondary);
-      border-radius: 8px;
-      margin: 0.9rem 0;
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      background: var(--pink-gradient);
-      border-radius: 8px;
-      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .rec-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--pink-primary);
-      margin-top: 0.9rem;
-    }
-
-    .footnote {
-      font-size: 0.78rem;
-      color: var(--text-tertiary);
-      margin-top: 1rem;
-      text-align: center;
-    }
-
-    @media (max-width:600px) {
-      .screen-section {
-        padding: 4rem 1.2rem 3rem;
-      }
-
-      .field-group {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .compare-card {
-        padding: 1.4rem 1.4rem;
-      }
-    }
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Business studio · D-Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+:root{--ink:#252b32;--muted:#71767c;--paper:#f8f8f6;--line:#e4e6e3;--accent:#dc4768;--blue:#ddecf1;--green:#386858}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 system-ui,-apple-system,sans-serif}button,input,textarea,select{font:inherit}button,a,input,textarea,select{outline-offset:4px}button{cursor:pointer}button:disabled{opacity:.5;cursor:wait}a{color:inherit;text-decoration:none}header{height:80px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:#fff}.brand{font-weight:750;letter-spacing:-1px;font-size:23px}.brand span{color:var(--accent)}.crumb{color:var(--muted);font-size:13px}.shell{max-width:1440px;margin:auto;display:grid;grid-template-columns:205px minmax(0,1fr);padding:45px 4vw;gap:45px}aside{padding-top:10px}aside p{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted)}nav{display:grid;gap:12px}nav a{padding:12px;border-radius:10px;font-size:13px}nav a:hover{background:#eee}nav b{color:var(--accent);margin-right:12px}.side-note{margin-top:60px!important;text-transform:none!important;letter-spacing:0!important;line-height:1.8!important}.eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}h1{font-size:clamp(32px,4vw,52px);line-height:1.12;letter-spacing:-2px;font-weight:600;margin:15px 0}h2{font-size:23px;font-weight:600;letter-spacing:-.7px;margin:0}h3{margin:0;font-size:18px}.intro{display:flex;justify-content:space-between;gap:24px;align-items:center;margin-bottom:36px}.intro p{max-width:580px;color:var(--muted)}.orb{flex:none;width:115px;height:115px;border-radius:50%;background:var(--blue);position:relative;overflow:hidden}.orb:before,.orb:after{content:'';position:absolute;width:88px;height:88px;border:1px solid #759ba8;border-radius:50%;left:44px;top:12px}.orb:after{left:18px;top:48px;border-color:var(--accent)}section{scroll-margin-top:20px;background:white;border:1px solid var(--line);border-radius:18px;padding:28px;margin-bottom:24px}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:22px}.step{font-size:11px;color:var(--muted);letter-spacing:1px}.hint{font-size:13px;color:var(--muted);margin:7px 0 20px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}.wide{grid-column:1/-1}label{display:grid;gap:7px;font-size:12px;font-weight:650;color:#535b62}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:9px;background:#fafbf9;color:var(--ink);padding:11px 12px;min-width:0}textarea{resize:vertical;min-height:90px}input:focus,textarea:focus,select:focus{outline:2px solid #d6e8ed}.limits{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.btn{border:1px solid var(--line);border-radius:9px;padding:10px 16px;background:#fff;font-size:13px;font-weight:650}.primary{background:var(--ink);border-color:var(--ink);color:white}.pink{background:#fcf0f3;border-color:#f5d8df;color:#b83755}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:22px}.note{font-size:12px;color:var(--muted)}#message{white-space:pre-wrap;margin:0 0 20px;border-left:3px solid var(--accent);padding:10px 16px;background:#fff0f3}#message:empty{display:none}.empty{padding:35px;text-align:center;border:1px dashed #cfd6d5;border-radius:12px;background:#fafbf9}.empty p{font-size:13px;color:var(--muted)}.scenario{padding:22px;background:#f8faf9;border:1px solid var(--line);border-radius:12px;margin-top:16px}.scenario-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.scenario .fields{grid-template-columns:repeat(3,1fr)}.scenario textarea{min-height:65px}.remove{border:0;background:transparent;color:#995668;font-size:12px}.questions{padding:18px;background:#eef6f8;border-radius:12px;margin-top:18px}.questions ol{padding-left:20px}.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:20px 0}.result{border:1px solid var(--line);border-radius:12px;padding:20px}.result .value{font-size:28px;letter-spacing:-1px;margin-top:12px}.result dl{font-size:12px}.result dt{color:var(--muted)}.result dd{margin:0 0 10px;font-weight:650}.badge{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--green)}.bad{color:#b34355}.recommendation{background:var(--blue);padding:22px;border-radius:12px}.recommendation p{margin:5px 0}.sensitivity{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:18px 0}input[type=range]{padding:0;accent-color:var(--accent)}details{font-size:12px;color:var(--muted);margin-top:16px}summary{cursor:pointer}table{width:100%;border-collapse:collapse;font-size:12px}td,th{text-align:left;padding:7px;border-bottom:1px solid var(--line)}.table-wrap{overflow:auto}footer{font-size:12px;color:var(--muted);padding:0 0 30px}#ai-status{font-size:11px;color:var(--muted)}[hidden]{display:none!important}@media(max-width:1000px){.shell{grid-template-columns:1fr;gap:20px}aside{display:none}}@media(max-width:600px){header{height:66px}.shell{padding:25px 16px}.orb{display:none}section{padding:20px}.fields,.limits,.scenario .fields,.sensitivity{grid-template-columns:1fr}.section-head{align-items:flex-start}.crumb{font-size:11px}.intro{margin-bottom:20px}h1{letter-spacing:-1px}.btn{padding:10px 12px}}
+/* Inherit the homepage's shared tokens; keep workspace layout local. */
+:root{--ink:var(--text-primary);--muted:var(--text-secondary);--paper:var(--bg-primary);--line:var(--card-border);--accent:var(--pink-primary);--blue:var(--pink-soft)}
+body{font-family:var(--font-family);background:radial-gradient(ellipse at 95% 8%,var(--pink-soft),transparent 45%),var(--bg-primary)}
+header,.shell{position:relative;z-index:2}header{background:var(--card-bg);backdrop-filter:blur(25px)}
+h1{font-weight:700;letter-spacing:-.04em}h2,h3{font-weight:700;letter-spacing:-.025em}
+section{border-radius:var(--radius-big-squarcle);background:var(--card-bg);box-shadow:var(--shadow-card);backdrop-filter:blur(25px);padding:32px}
+.scenario,.result{border-radius:var(--radius-rect-squarcle);background:var(--card-bg);box-shadow:var(--shadow-subtle);transition:var(--transition-fast)}
+.scenario:hover,.result:hover{border-color:var(--card-border-hover);box-shadow:var(--shadow-card-hover)}
+.btn{border-radius:var(--radius-pill);transition:var(--transition-fast);padding:12px 21px}
+.btn:hover{border-color:var(--card-border-hover);box-shadow:var(--shadow-subtle)}
+.primary{background:var(--pink-gradient);border-color:transparent;color:var(--text-light);box-shadow:0 6px 20px var(--pink-glow)}
+.primary:hover{background:var(--pink-hover)}.pink{color:var(--pink-primary);background:var(--pink-soft);border-color:var(--pink-tint)}
+input,textarea,select{background:var(--bg-secondary);border-radius:14px;color:var(--text-primary)}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--card-border-hover)}
+.orb{background:var(--pink-gradient);box-shadow:0 15px 40px var(--pink-glow)}.orb:before,.orb:after{border-color:rgba(255,255,255,.65)}
+nav a{border-radius:var(--radius-pill)}nav a:hover{background:var(--pink-soft);color:var(--pink-primary)}
+.questions,.recommendation{background:var(--pink-soft);border-radius:var(--radius-rect-squarcle)}
+.empty{background:var(--bg-secondary);border-radius:var(--radius-rect-squarcle)}
+.field-help{font-size:12px;font-weight:400;color:var(--text-secondary);line-height:1.5;min-height:36px}
+label{align-content:start}input,textarea,select{font-weight:400}
+.amount-label{font-size:12px;font-weight:600;color:var(--pink-primary);min-height:18px}
+.scenario{counter-increment:scenario}.scenario-number:before{content:'Scenario ' counter(scenario) ' / '}.scenario-list{counter-reset:scenario}
+.assumption-number{color:var(--pink-primary);margin-right:5px}.result .hint{margin-top:8px}
+@media(max-width:600px){section{padding:22px}.field-help{min-height:0}.section-head{flex-wrap:wrap}.result-grid{grid-template-columns:minmax(0,1fr)}}
+/* Keep the application frame stationary; the workspace owns vertical scrolling. */
+html,body{height:100%;overflow:hidden}
+body{height:100dvh;min-height:0;display:flex;flex-direction:column}
+header{flex:0 0 80px}
+.domain-nav{display:flex;align-items:center;gap:8px;font-size:13px}.domain-nav a{padding:8px 10px}.domain-nav span{color:var(--text-tertiary)}
+@media(max-width:600px){.domain-nav{gap:2px;font-size:12px}.domain-nav a{padding:8px 5px}}
+.shell{flex:1;min-height:0;width:100%;overflow:hidden;padding-top:0;padding-bottom:0}
+.shell>aside{align-self:start;padding-top:55px;max-height:100%;overflow-y:auto}
+.shell>main{min-height:0;min-width:0;overflow-y:auto;overscroll-behavior-y:contain;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;padding:45px 16px 0 0;scroll-padding-top:24px}
+.shell>main::-webkit-scrollbar{display:none;width:0;height:0}
+@media(max-width:600px){header{flex-basis:66px}.shell{padding-top:0;padding-bottom:0}.shell>main{padding:25px 4px 0 0;scroll-padding-top:16px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="/domain-transition.css">
+<script src="/domain-transition.js"></script>
 </head>
-
-<body>
-  <div class="grain-overlay"></div>
-  <div class="app-viewport" id="app-viewport">
-    <!-- screen sections injected by JS -->
-  </div>
-
-  <script>
-    const STORAGE_KEY = 'finance-sim:data';
-
-    let state = { step: 'resources', resources: [], scenarios: [], loaded: false };
-    let nextResId = 1, nextScenarioId = 1;
-    let currentAllocations = {};
-    let isTransitioning = false;
-    const STEP_ORDER = ['resources', 'stoploss', 'scenario', 'compare'];
-    const STEP_LABEL = { resources: 'Resources', stoploss: 'Stop-loss', scenario: 'Scenarios', compare: 'Compare' };
-
-    function fmt(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
-    function clamp(n) { n = Number(n); if (isNaN(n)) return 5; return Math.min(10, Math.max(1, n)); }
-    function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
-
-    async function loadData() {
-      try {
-        const res = await window.storage.get(STORAGE_KEY);
-        if (res && res.value) {
-          const parsed = JSON.parse(res.value);
-          state.resources = parsed.resources || [];
-          state.scenarios = parsed.scenarios || [];
-          nextResId = (Math.max(0, ...state.resources.map(r => r.id)) || 0) + 1;
-          nextScenarioId = (Math.max(0, ...state.scenarios.map(s => s.id)) || 0) + 1;
-        }
-      } catch (e) { /* fresh start */ }
-      state.loaded = true;
-      render(true);
-    }
-    async function persist() {
-      try { await window.storage.set(STORAGE_KEY, JSON.stringify({ resources: state.resources, scenarios: state.scenarios })); }
-      catch (e) { console.error('Could not save', e); }
-    }
-
-    function canGoTo(key) {
-      if (key === 'resources') return true;
-      if (key === 'stoploss') return state.resources.length > 0;
-      if (key === 'scenario') return state.resources.length > 0 && state.resources.every(r => r.stopLoss > 0);
-      if (key === 'compare') return state.scenarios.some(s => s.status === 'completed');
-      return false;
-    }
-
-    function setStep(next) {
-      if (isTransitioning || next === state.step) return;
-      if (!canGoTo(next)) return;
-      isTransitioning = true;
-      state.step = next;
-      render(false);
-      setTimeout(() => { isTransitioning = false; }, 700);
-    }
-    window.setStep = setStep;
-
-    // ---------- Resources ----------
-    function addResource() {
-      const nameEl = document.getElementById('res-name');
-      const descEl = document.getElementById('res-desc');
-      if (!nameEl.value.trim()) return;
-      state.resources.push({ id: nextResId++, name: nameEl.value.trim(), description: descEl.value.trim(), stopLoss: null });
-      nameEl.value = ''; descEl.value = '';
-      persist(); renderInPlace();
-    }
-    function removeResource(id) { state.resources = state.resources.filter(r => r.id !== id); persist(); renderInPlace(); }
-    function setStopLoss(id, val) { const r = state.resources.find(r => r.id === id); if (r) r.stopLoss = val; persist(); }
-
-    // ---------- Scenario builder ----------
-    function initAllocations() {
-      currentAllocations = {};
-      state.resources.forEach(r => { currentAllocations[r.id] = r.stopLoss; });
-    }
-    function sliderPosFromValue(val, min, max) { if (min <= 0) min = 1; const t = Math.log(val / min) / Math.log(max / min); return Math.round(t * 1000); }
-    function valueFromSliderPos(pos, min, max) { if (min <= 0) min = 1; const t = pos / 1000; return min * Math.pow(max / min, t); }
-    function onSliderInput(resId, pos) {
-      const r = state.resources.find(x => x.id === resId);
-      currentAllocations[resId] = valueFromSliderPos(Number(pos), r.stopLoss, r.stopLoss * 10000);
-      const amtEl = document.getElementById('amt-' + resId);
-      if (amtEl) amtEl.textContent = fmt(currentAllocations[resId]);
-    }
-    async function saveScenario() {
-      const scenario = {
-        id: nextScenarioId++, label: 'Scenario ' + (state.scenarios.length + 1),
-        allocations: { ...currentAllocations }, status: 'pending',
-        profitPotential: null, businessBenefit: null, riskExposure: null, summary: null, score: null
-      };
-      state.scenarios.push(scenario);
-      initAllocations(); persist(); renderInPlace();
-      runSimulation(scenario.id);
-    }
-    window.configureGeminiKey = function() {
-      const current = localStorage.getItem("GEMINI_API_KEY") || "";
-      const key = prompt("Enter your Google Gemini API Key (from Google AI Studio):", current);
-      if (key !== null) {
-        if (key.trim()) {
-          localStorage.setItem("GEMINI_API_KEY", key.trim());
-          alert("Gemini API key saved successfully!");
-        } else {
-          localStorage.removeItem("GEMINI_API_KEY");
-          alert("Gemini API key cleared.");
-        }
-      }
-    };
-
-    async function runSimulation(scenarioId) {
-      const scenario = state.scenarios.find(s => s.id === scenarioId);
-      if (!scenario) return;
-
-      let apiKey = localStorage.getItem("GEMINI_API_KEY");
-      if (!apiKey) {
-        apiKey = prompt("Please enter your Google Gemini API Key from Google AI Studio:\n(Stored locally in your browser, never committed to Git)");
-        if (apiKey && apiKey.trim()) {
-          apiKey = apiKey.trim();
-          localStorage.setItem("GEMINI_API_KEY", apiKey);
-        } else {
-          scenario.status = "error";
-          scenario.summary = "Simulation cancelled: No Gemini API key provided.";
-          renderInPlace();
-          return;
-        }
-      }
-
-      const lines = state.resources.map(r => {
-        const val = scenario.allocations[r.id];
-        return `- ${r.name}: allocated ${fmt(val)} (stop-loss level ${fmt(r.stopLoss)}). Description: ${r.description || 'no description given'}.`;
-      }).join('\n');
-
-      const promptText = `You are a business decision-simulation engine. A user proposed this resource allocation scenario:\n\n${lines}\n\nEvaluate it, considering how far each resource sits above its stop-loss level, what it represents per its description, and how the allocations interact.\n\nRespond with ONLY a JSON object matching this schema:\n{"profitPotential": <integer 1-10>, "businessBenefit": <integer 1-10>, "riskExposure": <integer 1-10, 10=highest risk>, "summary": "<1-2 sentence plain-language assessment, under 240 characters>"}`;
-
-      try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: promptText }] }],
-            generationConfig: {
-              responseMimeType: "application/json"
-            }
-          })
-        });
-
-        if (!response.ok) {
-          const errData = await response.json().catch(() => ({}));
-          const errMsg = errData.error?.message || response.statusText;
-          if (response.status === 400 || (errMsg && errMsg.toLowerCase().includes("api key"))) {
-            localStorage.removeItem("GEMINI_API_KEY");
-            alert(`Gemini API Error: ${errMsg}\n\nThe saved key has been reset. Please try again with a valid key.`);
-          }
-          throw new Error(errMsg || `API request failed with status ${response.status}`);
-        }
-
-        const data = await response.json();
-        const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!jsonText) throw new Error("No valid response received from Gemini.");
-
-        const parsed = JSON.parse(jsonText);
-        scenario.profitPotential = clamp(parsed.profitPotential);
-        scenario.businessBenefit = clamp(parsed.businessBenefit);
-        scenario.riskExposure = clamp(parsed.riskExposure);
-        scenario.summary = parsed.summary || '';
-        scenario.score = Math.round(((scenario.profitPotential + scenario.businessBenefit) - scenario.riskExposure + 10) / 30 * 100);
-        scenario.status = 'completed';
-      } catch (e) {
-        console.error('Simulation failed', e);
-        scenario.status = 'error';
-        if (!scenario.summary) {
-          scenario.summary = `Simulation error: ${e.message || 'Please check your connection and API key.'}`;
-        }
-      }
-      persist();
-      renderInPlace();
-    }
-    function removeScenario(id) { state.scenarios = state.scenarios.filter(s => s.id !== id); persist(); renderInPlace(); }
-    function retryScenario(id) { const s = state.scenarios.find(x => x.id === id); if (s) { s.status = 'pending'; renderInPlace(); runSimulation(id); } }
-
-    // ---------- Render ----------
-    function tabsHtml() {
-      return `<div class="step-tabs">${STEP_ORDER.map(k => {
-        const allowed = canGoTo(k);
-        return `<button class="step-tab${state.step === k ? ' active' : ''}" ${allowed ? `onclick="setStep('${k}')"` : 'disabled'}>${STEP_LABEL[k]}</button>`;
-      }).join('')}</div>`;
-    }
-
-    function screenHtml() {
-      if (state.step === 'resources') return resourcesScreen();
-      if (state.step === 'stoploss') return stoplossScreen();
-      if (state.step === 'scenario') return scenarioScreen();
-      if (state.step === 'compare') return compareScreen();
-    }
-
-    function resourcesScreen() {
-      const rows = state.resources.map(r => `
-    <div class="rect-squarcle">
-      <div class="rect-badge">₹</div>
-      <div class="rect-text">
-        <div class="rect-title">${escapeHtml(r.name)}</div>
-        ${r.description ? `<div class="rect-desc">${escapeHtml(r.description)}</div>` : ''}
-      </div>
-      <button class="icon-remove" onclick="removeResource(${r.id})" aria-label="Remove">✕</button>
-    </div>
-  `).join('');
-      return `
-    <div class="finance-header">
-      <div><span class="subheading-tag">Finance</span><div class="section-title">What resources do you have?</div></div>
-    </div>
-    <div class="section-desc">List the capital, capacity, or assets you could put behind a decision. A short description helps the simulation understand what changing each one means for the business.</div>
-    ${tabsHtml()}
-    <div class="list-stack">${rows || `<div class="empty-state">No resources added yet.</div>`}</div>
-    <div class="add-resource-card">
-      <div class="field-group">
-        <div class="field"><label>Resource name</label><input type="text" id="res-name" placeholder="e.g. Cash reserve"></div>
-        <div class="field"><label>Description (optional)</label><input type="text" id="res-desc" placeholder="e.g. Liquid capital for expansion"></div>
-      </div>
-      <div><button class="pill-btn ghost" onclick="addResource()">＋ Add resource</button></div>
-    </div>
-    <div class="actions-row">
-      <button class="secondary-link-btn" onclick="location.href='../hero.html'">← Back to Home</button>
-      <button class="pill-btn primary" ${state.resources.length === 0 ? 'disabled' : ''} onclick="setStep('stoploss')">Done with resources</button>
-    </div>
-  `;
-    }
-
-    function stoplossScreen() {
-      const rows = state.resources.map(r => `
-    <div class="rect-squarcle">
-      <div class="rect-badge">₹</div>
-      <div class="rect-text">
-        <div class="rect-title">${escapeHtml(r.name)}</div>
-        ${r.description ? `<div class="rect-desc">${escapeHtml(r.description)}</div>` : ''}
-      </div>
-      <input type="number" min="1" step="1" style="width:130px" value="${r.stopLoss ?? ''}" placeholder="₹ minimum"
-        onchange="setStopLoss(${r.id}, Number(this.value)); renderInPlace();">
-    </div>
-  `).join('');
-      return `
-    <div class="finance-header">
-      <div><span class="subheading-tag">Finance</span><div class="section-title">Minimum stop-loss</div></div>
-    </div>
-    <div class="section-desc">Set the minimum amount you'd still commit to each resource — the floor below which a scenario isn't worth doing. This anchors the low end of the range you'll explore next.</div>
-    ${tabsHtml()}
-    <div class="list-stack">${rows}</div>
-    <div class="actions-row">
-      <button class="secondary-link-btn" onclick="setStep('resources')">← Back</button>
-      <button class="pill-btn primary" ${state.resources.every(r => r.stopLoss > 0) ? '' : 'disabled'} onclick="initAllocations(); setStep('scenario')">Continue</button>
-    </div>
-  `;
-    }
-
-    function scenarioScreen() {
-      if (Object.keys(currentAllocations).length !== state.resources.length) initAllocations();
-      const sliders = state.resources.map(r => {
-        const min = r.stopLoss, max = r.stopLoss * 10000;
-        const val = currentAllocations[r.id] ?? min;
-        const pos = sliderPosFromValue(val, min, max);
-        return `
-      <div class="slider-card">
-        <div class="slider-top"><span class="name">${escapeHtml(r.name)}</span><span class="amt" id="amt-${r.id}">${fmt(val)}</span></div>
-        <input type="range" min="0" max="1000" value="${pos}" oninput="onSliderInput(${r.id}, this.value)">
-        <div class="range-bounds"><span>${fmt(min)}</span><span>${fmt(max)}</span></div>
-      </div>`;
-      }).join('');
-
-      const scenarioCards = state.scenarios.slice().reverse().map(s => `
-    <div class="rect-squarcle" style="align-items:flex-start; flex-direction:column;">
-      <div class="scenario-head">
-        <span class="rect-title">${s.label}</span>
-        <span class="status-pill ${s.status}">${s.status === 'pending' ? '<span class="spinner"></span> Simulating' : s.status === 'completed' ? 'Complete' : 'Failed'}</span>
-      </div>
-      <div class="scenario-body">
-        ${s.status === 'completed' ? `
-          <div class="scenario-summary">${escapeHtml(s.summary || '')}</div>
-          <div class="scenario-metrics">
-            <span class="metric-up">Profit <b>${s.profitPotential}/10</b></span>
-            <span class="metric-up">Benefit <b>${s.businessBenefit}/10</b></span>
-            <span class="metric-down">Risk <b>${s.riskExposure}/10</b></span>
-          </div>`: ''}
-        ${s.status === 'error' ? `<div class="scenario-summary">Simulation failed. <button class="secondary-link-btn" style="padding:0" onclick="retryScenario(${s.id})">Retry</button></div>` : ''}
-      </div>
-      <button class="secondary-link-btn" style="margin-top:0.6rem; padding-left:0;" onclick="removeScenario(${s.id})">Remove</button>
-    </div>
-  `).join('');
-
-      return `
-    <div class="finance-header">
-      <div><span class="subheading-tag">Finance</span><div class="section-title">Build a scenario</div></div>
-      <button class="secondary-link-btn" onclick="configureGeminiKey()" title="Configure Google Gemini API Key" style="font-size:0.82rem; border:1px solid rgba(0,0,0,0.08); padding:0.4rem 0.9rem; border-radius:var(--radius-pill); cursor:pointer;">⚙ Gemini Key</button>
-    </div>
-    <div class="section-desc">Drag each resource to the level you'd allocate, then save. The range runs from your stop-loss up to ten thousand times that.</div>
-    ${tabsHtml()}
-    <div class="list-stack">${sliders}</div>
-    <div class="actions-row">
-      <button class="secondary-link-btn" onclick="setStep('stoploss')">← Back</button>
-      <button class="pill-btn primary" onclick="saveScenario()">Save scenario</button>
-    </div>
-    ${state.scenarios.length ? `
-      <div class="finance-header" style="margin-top:1rem;">
-        <div><div class="section-title" style="font-size:1.15rem;">Saved scenarios</div><div class="section-desc" style="margin-top:0.2rem;">${state.scenarios.length} saved</div></div>
-      </div>
-      <div class="list-stack">${scenarioCards}</div>
-      <div class="actions-row">
-        <span></span>
-        <button class="pill-btn primary" ${state.scenarios.some(s => s.status === 'completed') ? '' : 'disabled'} onclick="setStep('compare')">View comparison</button>
-      </div>
-    ` : ''}
-  `;
-    }
-
-    function compareScreen() {
-      const completed = state.scenarios.filter(s => s.status === 'completed');
-      if (!completed.length) {
-        return `
-      <div class="finance-header"><div><span class="subheading-tag">Finance</span><div class="section-title">Scenario comparison</div></div></div>
-      ${tabsHtml()}
-      <div class="empty-state">No completed simulations yet — save a scenario first.</div>
-      <div class="actions-row"><button class="secondary-link-btn" onclick="setStep('scenario')">← Back to scenarios</button><span></span></div>
-    `;
-      }
-      const maxScore = Math.max(...completed.map(s => s.score));
-      const rows = completed.slice().sort((a, b) => b.score - a.score).map(s => {
-        const isTop = s.score === maxScore;
-        return `
-      <div class="compare-card${isTop ? ' recommended' : ''}">
-        <div class="compare-top"><span class="sname">${s.label}</span><span class="score">${s.score}</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${s.score}%"></div></div>
-        <div class="scenario-metrics">
-          <span class="metric-up">Profit potential ${s.profitPotential}/10</span>
-          <span class="metric-up">Business benefit ${s.businessBenefit}/10</span>
-          <span class="metric-down">Risk exposure ${s.riskExposure}/10</span>
-        </div>
-        <div class="scenario-summary">${escapeHtml(s.summary || '')}</div>
-        ${isTop ? '<div class="rec-tag">★ Recommended</div>' : ''}
-      </div>`;
-      }).join('');
-
-      return `
-    <div class="finance-header"><div><span class="subheading-tag">Finance</span><div class="section-title">Scenario comparison</div></div></div>
-    <div class="section-desc">Ranked by overall score — profit potential and business benefit weighed against risk exposure.</div>
-    ${tabsHtml()}
-    <div class="list-stack">${rows}</div>
-    <div class="actions-row"><button class="secondary-link-btn" onclick="setStep('scenario')">← Build another scenario</button><span></span></div>
-    <div class="footnote">Scores come from an AI simulation of each allocation and are directional, not financial advice.</div>
-  `;
-    }
-
-    // Full render with screen-section transition wrapper (used on load and step changes)
-    function render(isInitial) {
-      const viewport = document.getElementById('app-viewport');
-      if (!state.loaded) {
-        viewport.innerHTML = `<div class="screen-section active"><div class="page-container"><div class="empty-state">Loading…</div></div></div>`;
-        return;
-      }
-      const html = `<div class="page-container">${screenHtml()}</div>`;
-      if (isInitial) {
-        viewport.innerHTML = `<div class="screen-section active" id="screen-current">${html}</div>`;
-        return;
-      }
-      // Transition: fade/slide the old screen out, new one in
-      const old = document.getElementById('screen-current');
-      if (old) {
-        old.id = 'screen-old';
-        old.classList.remove('active');
-        old.classList.add('exit-up');
-        setTimeout(() => { old.remove(); }, 720);
-      }
-      const fresh = document.createElement('div');
-      fresh.className = 'screen-section pre-enter';
-      fresh.id = 'screen-current';
-      fresh.innerHTML = html;
-      viewport.appendChild(fresh);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          fresh.classList.remove('pre-enter');
-          fresh.classList.add('active');
-        });
-      });
-    }
-
-    // Lightweight in-place refresh (no transition) for edits within the same step
-    function renderInPlace() {
-      const current = document.getElementById('screen-current');
-      if (!current) return;
-      current.innerHTML = `<div class="page-container">${screenHtml()}</div>`;
-    }
-
-    loadData();
-  </script>
+<body data-transition-elements="header > a, header .domain-nav a, header .domain-nav span, aside p, aside nav a, .intro .eyebrow, .intro h1, .intro p, .orb, .section-head > div > *, .section-head > button, #brief label, #brief .actions > *, #brief > .note">
+<div class="grain-overlay" aria-hidden="true"></div>
+<header><a class="brand" href="/hero.html#options">D-Flow</a><nav class="domain-nav" aria-label="Domains"><a href="/hero.html#options">Dashboard</a><span aria-hidden="true">|</span><a href="/finance/finance-scenario-simulator.html">Finance</a><span aria-hidden="true">|</span><a href="/hero.html#life" title="Life domain on the dashboard">Life</a></nav></header>
+<div class="shell">
+<aside><p>Your workspace</p><nav><a href="#brief"><b>01</b>Define the decision</a><a href="#scenarios"><b>02</b>Explore scenarios</a><a href="#comparison"><b>03</b>Compare outcomes</a></nav><p class="side-note">A little clarity before<br>a big commitment.<br><br>Business / Finance / Life</p></aside>
+<main>
+<div class="intro"><div><span class="eyebrow">Business studio</span><h1>What’s your next move?</h1><p>Give your decision some room. Map the possibilities, work through the limits, and see what each path asks of your business.</p></div><div class="orb" aria-hidden="true"></div></div>
+<div id="message" role="status" aria-live="polite"></div>
+<form id="workspace">
+<section id="brief"><div class="section-head"><div><span class="step">01 / THE STARTING POINT</span><h2>Define the decision.</h2></div><button type="button" class="btn" id="example">Try an example ↗</button></div>
+<div class="fields">
+<label>What are you working towards?<select name="aim"><option>Expansion</option><option>Profit improvement</option><option>Other</option></select></label>
+<label>What matters most?<select name="priority"><option>Net contribution</option><option>Preserve cash</option></select></label>
+<label class="wide">Tell us about the business<textarea name="business" required maxlength="4000" placeholder="What do you do, who do you serve, and where does the business stand today?"></textarea></label>
+<label class="wide">What would a good outcome look like?<textarea name="goal" required maxlength="4000" placeholder="For example: enter a new market in the next year while protecting our existing operations."></textarea></label>
+<div class="wide limits"><label>Available cash (₹)<input name="budget" type="number" min="0" max="1000000000000" step="any" required placeholder="1500000"></label><label>Available people<input name="team" type="number" min="0" max="1000000" required placeholder="4"></label><label>Planning horizon (months)<input name="months" type="number" min="1" max="60" value="12" required></label></div>
+<label class="wide">Constraints & context<textarea name="constraints" maxlength="8000" placeholder="Location, funding, capacity, non-negotiables, expected impact, or anything else we should understand."></textarea></label>
+</div><div class="actions"><button type="button" class="btn primary" id="propose">Suggest scenarios →</button><span id="ai-status">Connecting to workspace…</span></div><p class="note">Suggesting scenarios shares this brief with the connected AI service. Review estimates before comparing.</p>
+<div id="questions" class="questions" hidden><h3>A little more context</h3><ol id="question-list"></ol><label>Your answers<textarea name="answers" maxlength="8000" placeholder="Answer the questions here, then suggest scenarios again."></textarea></label></div>
+</section>
+<section id="scenarios"><div class="section-head"><div><span class="step">02 / THE POSSIBILITIES</span><h2>Give each path a shape.</h2></div><button type="button" id="add" class="btn">＋ Add scenario</button></div><p class="hint">Describe an approach and its incremental costs, revenue and team needs. All financial values are in rupees.</p><div id="scenario-list"><div class="empty"><h3>Start with a possibility.</h3><p>Ask for suggestions above, or add an approach you already have in mind.</p></div></div><div class="actions"><button type="submit" class="btn primary">Calculate & compare →</button><span class="note">Calculated from the assumptions you enter.</span></div></section>
+<section id="comparison"><span class="step">03 / THE TRADE-OFFS</span><h2>See what changes.</h2><p class="hint">Stress-test revenue and operating costs. Every adjustment is calculated by the server.</p><div class="sensitivity"><label>Revenue change<input type="range" id="revenue-change" min="-100" max="100" step="5" value="0"><span class="note">Lower ← baseline → higher</span></label><label>Operating cost change<input type="range" id="cost-change" min="-100" max="100" step="5" value="0"><span class="note">Lower ← baseline → higher</span></label></div><button type="submit" class="btn pink">Apply adjustments</button><div id="results" aria-live="polite"><p class="hint">Your comparison will appear here.</p></div></section>
+</form><footer>D-Flow · Business decision studio <span> / Drafts last for this visit.</span></footer>
+</main></div>
+<script>
+// Presentation only: collect inputs, call Python and render its returned decisions and values.
+const form = document.querySelector('#workspace');
+const list = document.querySelector('#scenario-list');
+const message = document.querySelector('#message');
+const results = document.querySelector('#results');
+list.classList.add('scenario-list');
+let busy = false;
+let amountTimer;
+let amountRevision = 0;
+function attachAmountLabel(input) {
+  const label = document.createElement('span'); label.className='amount-label';
+  input.after(label);
+  input.classList.add('money-input');
+}
+function refreshAmountLabels() {
+  clearTimeout(amountTimer);
+  const revision = ++amountRevision;
+  amountTimer = setTimeout(async () => {
+    const inputs = [...form.querySelectorAll('.money-input')];
+    const valid = inputs.filter(input => input.value !== '' && input.validity.valid);
+    inputs.forEach(input => input.nextElementSibling.textContent = '');
+    if (!valid.length) return;
+    try {
+      const data = await api('format', {values:valid.map(input => input.value)});
+      if (revision === amountRevision) valid.forEach((input,index) => input.nextElementSibling.textContent = data.labels[index]);
+    } catch { /* The main request reports server connectivity issues. */ }
+  }, 180);
+}
+attachAmountLabel(form.elements.budget);
+form.addEventListener('input', refreshAmountLabels);
+const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+function briefData() {
+  const data = {};
+  for (const name of ['aim','priority','business','goal','constraints','answers','budget','team','months']) {
+    data[name] = form.elements[name].value;
+  }
+  return data;
+}
+function scenarioData() {
+  return [...list.querySelectorAll('.scenario')].map(card => Object.fromEntries([...card.querySelectorAll('[data-field]')].map(input => [input.dataset.field,input.value])));
+}
+function invalidate() { results.innerHTML = '<p class="hint">Inputs changed. Calculate again to refresh the comparison.</p>'; }
+form.addEventListener('input', invalidate);
+async function api(path, data) {
+  const response = await fetch('/api/business/' + path, data === undefined ? {} : {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  const payload = await response.json();
+  if (!response.ok) throw new Error(typeof payload.detail === 'string' ? payload.detail : 'Please check the inputs. Numbers must be within their allowed ranges and descriptions cannot be empty.');
+  return payload;
+}
+async function run(action) {
+  if (busy) return;
+  busy = true; message.textContent = 'Working…';
+  const controls = [...form.querySelectorAll('input,textarea,select,button')];
+  controls.forEach(control => control.disabled = true);
+  try { await action(); message.textContent = ''; }
+  catch(error) { message.textContent = error.message === 'Failed to fetch' ? 'Cannot reach the server. Open this workspace through FastAPI and try again.' : error.message; }
+  finally { controls.forEach(control => control.disabled = false); busy = false; }
+}
+function addCard(s) {
+  list.querySelector('.empty')?.remove();
+  const card = document.createElement('article'); card.className = 'scenario';
+  const numeric = [['upfront','Upfront cost (₹)','One-time spending before the scenario begins, such as setup or equipment.'],['monthly_cost','Monthly operating cost (₹)','Recurring spending from month 1, including salaries, rent and services.'],['monthly_revenue','Monthly revenue after launch (₹)','Expected additional monthly income, starting in the first revenue month.'],['launch_month','First revenue month','The month income starts. Month 1 is the beginning of your planning period.'],['team_required','People required','People from your available team needed to carry out this scenario.']];
+  card.innerHTML = `<div class="scenario-top"><span class="eyebrow">Scenario assumptions</span><button type="button" class="remove">Remove</button></div><div class="fields"><label class="wide">Scenario title<input data-field="title" required maxlength="100" value="${escape(s.title)}"></label><label class="wide">The approach<textarea data-field="description" required maxlength="4000">${escape(s.description)}</textarea></label>${numeric.map(([key,label]) => `<label>${label}<input data-field="${key}" type="number" required min="${key === 'launch_month' ? '1' : '0'}" max="${key === 'launch_month' ? '60' : key === 'team_required' ? '1000000' : '1000000000000'}" step="${key === 'launch_month' || key === 'team_required' ? '1' : 'any'}" value="${escape(s[key])}"></label>`).join('')}<label class="wide">Assumptions & trade-offs<textarea data-field="assumptions" maxlength="4000">${escape(s.assumptions)}</textarea></label></div>`;
+  card.querySelector('.eyebrow').classList.add('scenario-number');
+  card.querySelectorAll('[data-field]').forEach((input, index) => {
+    const label = input.closest('label');
+    const number = document.createElement('span'); number.className='assumption-number'; number.textContent=`${index + 1}.`;
+    const heading = document.createElement('span'); heading.append(number, label.firstChild); label.prepend(heading);
+    const help = document.createElement('span'); help.className='field-help';
+    help.textContent = numeric.find(([key]) => key === input.dataset.field)?.[2] || ({title:'Give this option a short, recognisable name.',description:'Briefly describe the action and how it helps achieve your goal.',assumptions:'Record estimates, uncertainties and non-financial trade-offs behind this option.'}[input.dataset.field]);
+    label.insertBefore(help,input);
+    if (['upfront','monthly_cost','monthly_revenue'].includes(input.dataset.field)) attachAmountLabel(input);
+  });
+  card.querySelector('.remove').onclick = () => { if (!busy) {card.remove(); invalidate();} };
+  list.append(card);
+  refreshAmountLabels();
+}
+document.querySelector('#add').onclick = () => run(async () => {
+  if (list.querySelectorAll('.scenario').length >= 6) throw new Error('Compare up to six scenarios at a time.');
+  addCard(await api('template')); invalidate();
+});
+document.querySelector('#example').onclick = () => {
+  if (form.elements.business.value && !confirm('Replace the current brief and scenarios with an illustrative example?')) return;
+  run(async () => { const data = await api('example'); for (const [key,value] of Object.entries(data.brief)) form.elements[key].value = value;
+    list.innerHTML=''; data.scenarios.forEach(addCard); document.querySelector('#questions').hidden=true;
+    document.querySelector('#revenue-change').value='0'; document.querySelector('#cost-change').value='0';
+    invalidate(); refreshAmountLabels(); document.querySelector('#ai-status').textContent='Illustrative example loaded · edit assumptions to explore';
+  });
+};
+document.querySelector('#propose').onclick = () => {
+  const briefInputs = [...document.querySelector('#brief').querySelectorAll('input,textarea,select')];
+  if (briefInputs.some(input => !input.reportValidity())) return;
+  if (list.querySelector('.scenario') && !confirm('Replace the existing scenarios if new AI proposals are returned?')) return;
+  const brief = briefData();
+  run(async () => { const data = await api('propose', brief);
+    document.querySelector('#questions').hidden = !data.questions.length;
+    document.querySelector('#question-list').innerHTML = data.questions.map(q => `<li>${escape(q)}</li>`).join('');
+    if(data.scenarios.length) {list.innerHTML=''; data.scenarios.forEach(addCard);}
+    invalidate();
+  });
+};
+form.onsubmit = event => {
+  event.preventDefault();
+  const payload = {brief:briefData(),scenarios:scenarioData(),revenue_change:document.querySelector('#revenue-change').value,cost_change:document.querySelector('#cost-change').value};
+  run(async () => { if(!payload.scenarios.length) throw new Error('Add at least one scenario to calculate.');
+    const data = await api('simulate', payload);
+    results.innerHTML = `<p class="hint">${escape(data.sensitivity)}</p><div class="recommendation"><span class="eyebrow">Comparison insight</span><p>${escape(data.recommendation)}</p></div><div class="result-grid">${data.results.map(r => `<article class="result"><span class="badge ${r.feasible?'':'bad'}">${r.feasible?'Within numeric limits':'Outside numeric limits'}</span><h3>${escape(r.title)}</h3><div class="value">${escape(r.net)}</div><div class="note">Net contribution over the horizon</div><dl><dt>Peak cash required</dt><dd>${escape(r.funding)}</dd><dt>Cash headroom at peak spend</dt><dd>${escape(r.cash_left)}</dd><dt>Total incremental revenue</dt><dd>${escape(r.revenue)}</dd><dt>Cash recovery</dt><dd>${escape(r.recovery)}</dd></dl>${r.issues.map(issue=>`<p class="note bad">${escape(issue)}</p>`).join('')}<details><summary>Assumptions & monthly cash flow</summary><p>${escape(r.assumptions || 'No additional assumptions recorded.')}</p><div class="table-wrap"><table><thead><tr><th>Month</th><th>Cumulative cash</th></tr></thead><tbody>${r.timeline.map(row=>`<tr><td>${escape(row.month)}</td><td>${escape(row.balance)}</td></tr>`).join('')}</tbody></table></div></details></article>`).join('')}</div><details><summary>How these results are calculated</summary><p>${escape(data.method)}</p></details>`;
+    results.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+};
+api('status').then(data => document.querySelector('#ai-status').textContent = data.ai_configured ? 'AI suggestions available' : 'Manual scenarios available · AI not connected').catch(() => {message.textContent='Start the FastAPI server to use this workspace.';});
+</script>
 </body>
-
 </html>

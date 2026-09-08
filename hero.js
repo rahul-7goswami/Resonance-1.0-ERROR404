@@ -45,6 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 700);
   }
 
+  if (['#options', '#life'].includes(location.hash)) showOptions();
+
   // Squarcle navigation bridging
   const squarcleCards = document.querySelectorAll(".squarcle-card");
   squarcleCards.forEach((card) => {
@@ -54,12 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (page === "Business" || href) {
       const destination = href || "business/business.html";
       card.addEventListener("click", () => {
-        window.location.href = destination;
+        window.DFlowTransition.navigate(destination);
       });
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          window.location.href = destination;
+          window.DFlowTransition.navigate(destination);
         }
       });
     }
