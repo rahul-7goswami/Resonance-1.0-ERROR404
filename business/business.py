@@ -12,9 +12,11 @@ from urllib.request import Request, urlopen
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError
+from finance.finance import router as finance_router
 
 ROOT = Path(__file__).resolve().parent.parent
 app = FastAPI(title="Resonance Business", version="1.0.0")
+app.include_router(finance_router)
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=4000)]
 Money = Annotated[float, Field(ge=0, le=1e12, allow_inf_nan=False)]
 
@@ -199,11 +201,6 @@ def business_page():
 @app.get("/hero.html", include_in_schema=False)
 def home():
     return FileResponse(ROOT / "hero.html")
-
-
-@app.get('/finance/finance-scenario-simulator.html', include_in_schema=False)
-def finance_page():
-    return FileResponse(ROOT / 'finance' / 'finance-scenario-simulator.html')
 
 
 # Explicit asset allowlist: Python, environment files and Git metadata are never served.

@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Personal finance · D-Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/domain-transition.css">
+    <script src="/domain-transition.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden
+        }
+
+        body {
+            height: 100dvh;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(ellipse at 95% 10%, var(--pink-soft), transparent 48%), var(--bg-primary);
+            font-family: var(--font-family)
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit
+        }
+
+        button,
+        a,
+        input,
+        textarea,
+        select,
+        summary {
+            outline-offset: 4px
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: wait
+        }
+
+        header {
+            flex: 0 0 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5vw;
+            border-bottom: 1px solid var(--card-border);
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            z-index: 3
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: -1px
+        }
+
+        .domains {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            font-size: 13px
+        }
+
+        .domains a {
+            padding: 8px;
+            border-radius: var(--radius-pill)
+        }
+
+        .domains a:hover {
+            color: var(--pink-primary);
+            background: var(--pink-soft)
+        }
+
+        .domains span {
+            color: var(--text-tertiary)
+        }
+
+        .shell {
+            display: grid;
+            grid-template-columns: 205px minmax(0, 1fr);
+            gap: 45px;
+            padding: 0 4vw;
+            max-width: 1440px;
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            margin: auto;
+            position: relative;
+            z-index: 2;
+            overflow: hidden
+        }
+
+        aside {
+            padding-top: 55px
+        }
+
+        aside>p {
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--text-secondary)
+        }
+
+        aside nav {
+            display: grid;
+            gap: 12px;
+            margin-top: 12px
+        }
+
+        aside nav a {
+            font-size: 13px;
+            padding: 12px;
+            border-radius: var(--radius-pill)
+        }
+
+        aside nav a:hover {
+            background: var(--pink-soft);
+            color: var(--pink-primary)
+        }
+
+        aside b {
+            color: var(--pink-primary);
+            margin-right: 12px
+        }
+
+        .aside-note {
+            margin-top: 65px;
+            font-size: 12px !important;
+            letter-spacing: 0 !important;
+            line-height: 1.8
+        }
+
+        main {
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+            overscroll-behavior: contain;
+            padding: 45px 16px 30px 0;
+            scroll-padding-top: 24px
+        }
+
+        main::-webkit-scrollbar {
+            display: none
+        }
+
+        .intro {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 34px
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--pink-primary)
+        }
+
+        h1 {
+            font-size: clamp(32px, 4vw, 52px);
+            line-height: 1.14;
+            letter-spacing: -.04em;
+            margin: 16px 0;
+            font-weight: 700
+        }
+
+        h2 {
+            font-size: 24px;
+            letter-spacing: -.025em
+        }
+
+        h3 {
+            font-size: 18px;
+            letter-spacing: -.02em
+        }
+
+        .intro p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            max-width: 590px;
+            line-height: 1.65
+        }
+
+        .orb {
+            width: 112px;
+            height: 112px;
+            flex: none;
+            border-radius: 50%;
+            background: var(--pink-gradient);
+            box-shadow: 0 16px 40px var(--pink-glow);
+            position: relative;
+            overflow: hidden
+        }
+
+        .orb:before,
+        .orb:after {
+            content: '';
+            position: absolute;
+            border: 1px solid #ffffff99;
+            border-radius: 50%;
+            width: 95px;
+            height: 95px;
+            left: 35px;
+            top: 15px
+        }
+
+        .orb:after {
+            left: 5px;
+            top: 60px
+        }
+
+        section {
+            padding: 32px;
+            margin-bottom: 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-big-squarcle);
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(25px);
+            scroll-margin-top: 16px
+        }
+
+        .step {
+            font-size: 11px;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 8px
+        }
+
+        .hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin: 10px 0 20px
+        }
+
+        .focus-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 22px 0
+        }
+
+        .chip,
+        .btn {
+            padding: 10px 18px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--card-border);
+            background: white;
+            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition-fast)
+        }
+
+        .chip[aria-pressed=true] {
+            background: var(--pink-soft);
+            border-color: var(--card-border-hover);
+            color: var(--pink-primary)
+        }
+
+        .chip:hover,
+        .btn:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: var(--shadow-subtle)
+        }
+
+        .primary {
+            background: var(--pink-gradient);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 6px 20px var(--pink-glow)
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            align-content: start;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary)
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            min-width: 0;
+            border: 1px solid var(--card-border);
+            background: var(--bg-secondary);
+            border-radius: 14px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-primary)
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: 2px solid var(--card-border-hover)
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px
+        }
+
+        .thoughts {
+            min-height: 145px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px
+        }
+
+        .wide {
+            grid-column: 1/-1
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px
+        }
+
+        .note {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            line-height: 1.6
+        }
+
+        .disclosure {
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-secondary)
+        }
+
+        summary {
+            cursor: pointer;
+            padding: 10px 0
+        }
+
+        .disclosure .grid {
+            margin-top: 14px
+        }
+
+        .empty {
+            text-align: center;
+            padding: 32px;
+            border-radius: var(--radius-rect-squarcle);
+            border: 1px dashed var(--card-border-hover);
+            background: var(--bg-secondary);
+            margin-top: 20px
+        }
+
+        .empty p {
+            margin-top: 10px;
+            color: var(--text-secondary);
+            font-size: 13px
+        }
+
+        .panel {
+            padding: 22px;
+            border-radius: var(--radius-rect-squarcle);
+            background: var(--pink-soft);
+            margin-top: 18px
+        }
+
+        .panel p {
+            margin-top: 8px;
+            font-size: 14px;
+            line-height: 1.7
+        }
+
+        .panel ul,
+        .panel ol {
+            padding-left: 22px;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-top: 12px
+        }
+
+        .questions {
+            display: grid;
+            gap: 16px;
+            margin-top: 24px
+        }
+
+        .questions span {
+            color: var(--pink-primary)
+        }
+
+        .facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+            gap: 12px;
+            margin: 20px 0
+        }
+
+        .fact {
+            padding: 18px;
+            background: var(--bg-secondary);
+            border-radius: 18px
+        }
+
+        .fact strong {
+            font-size: 22px;
+            display: block;
+            margin: 6px 0
+        }
+
+        .report {
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.85;
+            margin-top: 20px;
+            overflow-wrap: anywhere
+        }
+
+        .sources {
+            display: grid;
+            gap: 10px;
+            padding-left: 22px;
+            margin-top: 18px;
+            font-size: 13px
+        }
+
+        .sources a,
+        .evidence a {
+            color: #bd2547;
+            text-decoration: underline
+        }
+
+        .evidence {
+            border-left: 2px solid var(--pink-primary);
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-size: 13px;
+            line-height: 1.7
+        }
+
+        .evidence p {
+            margin-bottom: 8px
+        }
+
+        .suggestions {
+            width: 100%;
+            height: 150px;
+            border: 0;
+            background: white;
+            margin-top: 18px
+        }
+
+        #message {
+            padding: 16px 20px;
+            background: var(--pink-soft);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            font-size: 13px
+        }
+
+        #message:empty {
+            display: none
+        }
+
+        [hidden] {
+            display: none !important
+        }
+
+        footer {
+            font-size: 12px;
+            color: var(--text-secondary);
+            padding-bottom: 12px
+        }
+
+        @media(max-width:1000px) {
+            .shell {
+                grid-template-columns: 1fr;
+                gap: 0
+            }
+
+            aside {
+                display: none
+            }
+        }
+
+        @media(max-width:600px) {
+            header {
+                flex-basis: 66px;
+                padding: 0 18px
+            }
+
+            .domains {
+                gap: 2px;
+                font-size: 11px
+            }
+
+            .domains a {
+                padding: 6px
+            }
+
+            .shell {
+                padding: 0 16px
+            }
+
+            main {
+                padding: 25px 0
+            }
+
+            .orb {
+                display: none
+            }
+
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            section {
+                padding: 22px
+            }
+
+            h1 {
+                font-size: 35px
+            }
+
+            .chip {
+                padding: 9px 12px;
+                font-size: 12px
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                scroll-behavior: auto !important;
+                transition: none !important
+            }
+        }
+    </style>
+</head>
+
+<body
+    data-transition-elements=".brand,.domains a,aside>p,aside nav a,.intro .eyebrow,.intro h1,.intro p,.orb,#goal>.step,#goal>h2,.focus-options button,#goal>.grid>label,#goal>.actions>*">
+    <div class="grain-overlay" aria-hidden="true"></div>
+    <header><a class="brand" href="/hero.html#options">D-Flow</a>
+        <nav class="domains" aria-label="Domains"><a href="/hero.html#options">Dashboard</a><span>|</span><a
+                href="/business/business.html" data-domain-link>Business</a><span>|</span><a
+                href="/hero.html#life">Life</a></nav>
+    </header>
+    <div class="shell">
+        <aside>
+            <p>YOUR WORKSPACE</p>
+            <nav aria-label="Finance steps"><a href="#goal"><b>01</b>What's on your mind</a><a
+                    href="#clarify"><b>02</b>Find your focus</a><a href="#research"><b>03</b>Make an informed move</a>
+            </nav>
+            <p class="aside-note">Your money.<br>Your priorities.<br>A clearer way forward.<br><br>Personal finance /
+                D-Flow</p>
+        </aside>
+        <main>
+            <div class="intro">
+                <div><span class="eyebrow">Personal finance</span>
+                    <h1>Make room for what matters.</h1>
+                    <p>A purchase you're considering. Savings you're building. A decision you can't quite untangle.
+                        Start with your thoughts—we'll help you find the focus.</p>
+                </div>
+                <div class="orb" aria-hidden="true"></div>
+            </div>
+            <div id="message" role="status" aria-live="polite"></div>
+            <form id="finance-form">
+                <section id="goal"><span class="step">01 / YOUR STARTING POINT</span>
+                    <h2>What are you thinking about?</h2>
+                    <div class="focus-options" role="group" aria-label="Personal finance focus"><button type="button"
+                            class="chip" data-focus="Purchase" aria-pressed="true">Purchase</button><button
+                            type="button" class="chip" data-focus="Invest or liquidate" aria-pressed="false">Invest or
+                            liquidate</button><button type="button" class="chip" data-focus="Savings"
+                            aria-pressed="false">Savings</button><button type="button" class="chip"
+                            data-focus="Everyday money" aria-pressed="false">Everyday money</button><button
+                            type="button" class="chip" data-focus="Something else" aria-pressed="false">Something
+                            else</button></div>
+                    <div class="grid"><label class="wide">Your thoughts & goal<textarea class="thoughts" name="thoughts"
+                                required maxlength="6000"
+                                placeholder="I'm thinking of buying a car, but I'm unsure whether to buy now or save for another year. I commute daily and need something practical for my family…"></textarea><span
+                                class="note">Write naturally. Include what you want, what worries you, and any options
+                                already on your mind.</span></label>
+                        <label>Your location<input name="location" required maxlength="200"
+                                placeholder="City and country, e.g. Pune, India"><span class="note">So the research
+                                reflects local options and rules.</span></label><label>When would you like to
+                            decide?<input name="timeline" required maxlength="6000"
+                                placeholder="In six months, or still exploring"></label>
+                        <label class="wide">What matters most to you?<textarea name="priorities" maxlength="4000"
+                                placeholder="Family needs, commute, flexibility, peace of mind, avoiding debt, keeping savings accessible…"></textarea></label>
+                    </div>
+                    <details class="disclosure">
+                        <summary>Your money picture · optional</summary>
+                        <p class="note">Approximate figures are enough. Leave anything unknown blank. Amounts are in
+                            rupees.</p>
+                        <div class="grid"><label>Monthly take-home income (₹)<input name="income" type="number" min="0"
+                                    max="1000000000000" step="any" placeholder="After tax"></label><label>Monthly
+                                spending (₹)<input name="spending" type="number" min="0" max="1000000000000" step="any"
+                                    placeholder="Include bills and loan payments"></label><label>Available savings
+                                (₹)<input name="savings" type="number" min="0" max="1000000000000"
+                                    step="any"></label><label>Savings to keep untouched (₹)<input name="reserve"
+                                    type="number" min="0" max="1000000000000" step="any"
+                                    placeholder="Your chosen safety buffer"></label><label>Spending limit for this goal
+                                (₹)<input name="budget" type="number" min="0" max="1000000000000" step="any"></label>
+                        </div><button type="button" class="btn" id="snapshot-btn" style="margin-top:16px">See my money
+                            picture</button>
+                        <div id="snapshot" class="facts" aria-live="polite"></div>
+                    </details>
+                    <div class="actions"><button type="submit" class="btn primary">Help me find my focus →</button><span
+                            class="note" id="agent-status">Connecting…</span></div>
+                    <p class="note" style="margin-top:12px">AI actions share your entered goal and optional figures with
+                        the connected research service.</p>
+                </section>
+                <section id="clarify"><span class="step">02 / A LITTLE CLARITY</span>
+                    <h2>Turn your thoughts into a direction.</h2>
+                    <div id="outline">
+                        <div class="empty">
+                            <h3>You don't need a perfect brief.</h3>
+                            <p>The agent will organize your thoughts, identify your priorities, and ask about the
+                                details that matter.</p>
+                        </div>
+                    </div>
+                    <div id="followup" hidden>
+                        <div id="questions" class="questions"></div>
+                        <div class="actions"><button type="submit" class="btn">Refine my focus</button><button
+                                type="button" class="btn primary" id="research-btn">Research my options →</button></div>
+                        <p class="note" style="margin-top:12px">Research compares options, then checks drawbacks and
+                            conflicting evidence. It can take a few minutes.</p>
+                    </div>
+                </section>
+                <section id="research"><span class="step">03 / A WELL-INFORMED NEXT STEP</span>
+                    <h2>A conclusion you can understand.</h2>
+                    <div id="report">
+                        <div class="empty">
+                            <h3>Evidence before a decision.</h3>
+                            <p>Your researched conclusion, alternatives, trade-offs and linked sources will appear here.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </form>
+            <footer>D-Flow · Personal finance / Your draft lasts for this visit.</footer>
+        </main>
+    </div>
+    <script>
+        const form = document.querySelector('#finance-form'), message = document.querySelector('#message');
+        let focus = 'Purchase', busy = false, questions = [], previousAnswers = '';
+        const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const safeUrl = url => { try { const u = new URL(url); return u.protocol === 'https:' ? u.href : '#'; } catch { return '#'; } };
+        function data() { const p = { focus }; for (const name of ['thoughts', 'location', 'timeline', 'priorities']) p[name] = form.elements[name].value; for (const name of ['income', 'spending', 'savings', 'reserve', 'budget']) p[name] = form.elements[name].value || null; p.answers = previousAnswers + '\n' + [...document.querySelectorAll('[data-answer]')].filter(input => input.value.trim()).map(input => input.dataset.question + '\n' + input.value).join('\n\n'); return p; }
+        async function api(route, payload) { const r = await fetch('/api/finance/' + route, payload === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const result = await r.json(); if (!r.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Please check your goal and financial inputs.'); return result; }
+        async function task(label, action) { if (busy) return; busy = true; message.textContent = label; const controls = [...form.querySelectorAll('input,textarea,button')]; controls.forEach(x => x.disabled = true); try { await action(); message.textContent = ''; } catch (e) { message.textContent = e.message === 'Failed to fetch' ? 'Cannot reach the server. Please try again.' : e.message; message.scrollIntoView({ block: 'nearest' }); } finally { controls.forEach(x => x.disabled = false); busy = false; } }
+        function facts(items) { return items.map(item => `<div class="fact"><span class="note">${esc(item.label)}</span><strong>${esc(item.value)}</strong><p class="note">${esc(item.note)}</p></div>`).join(''); }
+        function invalidate() { document.querySelector('#report').innerHTML = '<p class="hint">Your goal has changed. Run research again for an updated conclusion.</p>'; }
+        form.addEventListener('input', invalidate);
+        document.querySelectorAll('[data-focus]').forEach(button => button.onclick = () => { focus = button.dataset.focus; document.querySelectorAll('[data-focus]').forEach(b => b.setAttribute('aria-pressed', String(b === button))); invalidate(); });
+        document.querySelectorAll('[data-domain-link]').forEach(a => a.onclick = e => { if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return; e.preventDefault(); DFlowTransition.navigate(a.href); });
+        document.querySelector('#snapshot-btn').onclick = () => { if (!form.reportValidity()) return; const payload = data(); task('Calculating your money picture…', async () => { const r = await api('snapshot', payload); document.querySelector('#snapshot').innerHTML = facts(r.items) || '<p class="note">Enter income and spending, savings and reserve, or a spending limit to see a summary.</p>'; }); };
+        form.onsubmit = e => { e.preventDefault(); const payload = data(); task('Organizing your thoughts and identifying what matters…', async () => { const r = await api('organize', payload), o = r.outline; previousAnswers = payload.answers; questions = o.questions; document.querySelector('#outline').innerHTML = `<div class="panel"><h3>${esc(o.title)}</h3><p>${esc(o.understanding)}</p><ul>${o.priorities.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div><div class="panel"><h3>What we'll investigate</h3><ol>${o.research_plan.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`; document.querySelector('#snapshot').innerHTML = facts(r.snapshot); document.querySelector('#questions').innerHTML = questions.map((q, i) => `<label><span>${i + 1}. ${esc(q)}</span><textarea data-answer data-question="${esc(q)}" maxlength="1600" placeholder="Add what you know, or explain what you're unsure about."></textarea></label>`).join(''); document.querySelector('#followup').hidden = false; document.querySelector('#clarify').scrollIntoView({ block: 'start' }); }); };
+        function reportBlock(r) { return `<div class="report">${esc(r.text)}</div><h3 style="margin-top:24px">Sources</h3><ol class="sources">${r.sources.map(s => `<li><a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a></li>`).join('')}</ol><details class="disclosure"><summary>Evidence linked to specific claims</summary>${r.evidence.map(e => `<div class="evidence"><p>${esc(e.text)}</p>${e.source_ids.map(id => { const s = r.sources.find(x => x.id === id); return s ? `<a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer">[${esc(id)}] ${esc(s.title)}</a> ` : ''; }).join('')}</div>`).join('')}</details><details class="disclosure"><summary>Searches performed</summary><ul style="padding-left:20px">${r.queries.map(q => `<li>${esc(q)}</li>`).join('')}</ul></details>`; }
+        function suggestions(container, r) { if (!r.search_suggestions) return; const frame = document.createElement('iframe'); frame.className = 'suggestions'; frame.title = 'Google Search suggestions'; frame.setAttribute('sandbox', 'allow-popups allow-popups-to-escape-sandbox'); frame.srcdoc = r.search_suggestions; container.append(frame); }
+        document.querySelector('#research-btn').onclick = () => { if (!form.reportValidity()) return; const payload = data(); task('Researching options, then checking evidence and trade-offs. This may take a few minutes…', async () => { const r = await api('research', payload), target = document.querySelector('#report'); target.innerHTML = `<p class="hint">Researched ${esc(r.date)} · Discovery + verification</p><div class="facts">${facts(r.snapshot)}</div>${reportBlock(r.conclusion)}<details class="disclosure"><summary>First-pass research notes</summary><div id="discovery">${reportBlock(r.discovery)}</div></details><p class="note" style="margin-top:20px">${esc(r.note)}</p>`; suggestions(target, r.conclusion); suggestions(target.querySelector('#discovery'), r.discovery); document.querySelector('#research').scrollIntoView({ block: 'start' }); }); };
+        api('status').then(r => document.querySelector('#agent-status').textContent = r.configured ? 'Your research agent is connected' : 'Research agent not connected yet').catch(() => document.querySelector('#agent-status').textContent = 'Open this page through the D-Flow server');
+    </script>
+</body>
+
+</html>
