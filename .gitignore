@@ -20,3 +20,5 @@ __pycache__/
 *.py[cod]
 node_modules/
 data/inputs/
+.venv/
+.dflow-settings.json
