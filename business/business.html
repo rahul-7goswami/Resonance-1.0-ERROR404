@@ -49,10 +49,12 @@ header{flex:0 0 80px}
 </style>
 <link rel="stylesheet" href="/domain-transition.css">
 <script src="/domain-transition.js"></script>
+<link rel="stylesheet" href="/theme.css">
+<script src="/theme.js"></script>
 </head>
 <body data-transition-elements="header > a, header .domain-nav a, header .domain-nav span, aside p, aside nav a, .intro .eyebrow, .intro h1, .intro p, .orb, .section-head > div > *, .section-head > button, #brief label, #brief .actions > *, #brief > .note">
 <div class="grain-overlay" aria-hidden="true"></div>
-<header><a class="brand" href="/hero.html#options">D-Flow</a><nav class="domain-nav" aria-label="Domains"><a href="/hero.html#options">Dashboard</a><span aria-hidden="true">|</span><a href="/finance/finance.html" onclick="if(!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey){event.preventDefault();DFlowTransition.navigate(this.href)}">Finance</a><span aria-hidden="true">|</span><a href="/hero.html#life" title="Life domain on the dashboard">Life</a></nav></header>
+<header><a class="brand" href="/hero.html#options">D-Flow</a><nav class="domain-nav" aria-label="Domains"><a href="/hero.html#options">Dashboard</a><span aria-hidden="true">|</span><a href="/finance/finance.html" onclick="if(!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey){event.preventDefault();DFlowTransition.navigate(this.href)}">Finance</a><span aria-hidden="true">|</span><a href="/life/life.html">Life</a><span aria-hidden="true">|</span><a href="/pricing.html">Pricing</a></nav></header>
 <div class="shell">
 <aside><p>Your workspace</p><nav><a href="#brief"><b>01</b>Define the decision</a><a href="#scenarios"><b>02</b>Explore scenarios</a><a href="#comparison"><b>03</b>Compare outcomes</a></nav><p class="side-note">A little clarity before<br>a big commitment.<br><br>Business / Finance / Life</p></aside>
 <main>
@@ -72,7 +74,7 @@ header{flex:0 0 80px}
 </section>
 <section id="scenarios"><div class="section-head"><div><span class="step">02 / THE POSSIBILITIES</span><h2>Give each path a shape.</h2></div><button type="button" id="add" class="btn">＋ Add scenario</button></div><p class="hint">Describe an approach and its incremental costs, revenue and team needs. All financial values are in rupees.</p><div id="scenario-list"><div class="empty"><h3>Start with a possibility.</h3><p>Ask for suggestions above, or add an approach you already have in mind.</p></div></div><div class="actions"><button type="submit" class="btn primary">Calculate & compare →</button><span class="note">Calculated from the assumptions you enter.</span></div></section>
 <section id="comparison"><span class="step">03 / THE TRADE-OFFS</span><h2>See what changes.</h2><p class="hint">Stress-test revenue and operating costs. Every adjustment is calculated by the server.</p><div class="sensitivity"><label>Revenue change<input type="range" id="revenue-change" min="-100" max="100" step="5" value="0"><span class="note">Lower ← baseline → higher</span></label><label>Operating cost change<input type="range" id="cost-change" min="-100" max="100" step="5" value="0"><span class="note">Lower ← baseline → higher</span></label></div><button type="submit" class="btn pink">Apply adjustments</button><div id="results" aria-live="polite"><p class="hint">Your comparison will appear here.</p></div></section>
-</form><footer>D-Flow · Business decision studio <span> / Drafts last for this visit.</span></footer>
+</form><footer>D-Flow · Business decision studio <span> / Submitted inputs are saved locally; this page resets on refresh.</span></footer>
 </main></div>
 <script>
 // Presentation only: collect inputs, call Python and render its returned decisions and values.
@@ -114,7 +116,7 @@ function briefData() {
   return data;
 }
 function scenarioData() {
-  return [...list.querySelectorAll('.scenario')].map(card => Object.fromEntries([...card.querySelectorAll('[data-field]')].map(input => [input.dataset.field,input.value])));
+  return [...list.querySelectorAll('.scenario')].map(card => ({...Object.fromEntries([...card.querySelectorAll('[data-field]')].map(input => [input.dataset.field,input.value])), formulas:card.formulas || []}));
 }
 function invalidate() { results.innerHTML = '<p class="hint">Inputs changed. Calculate again to refresh the comparison.</p>'; }
 form.addEventListener('input', invalidate);
@@ -135,7 +137,7 @@ async function run(action) {
 }
 function addCard(s) {
   list.querySelector('.empty')?.remove();
-  const card = document.createElement('article'); card.className = 'scenario';
+  const card = document.createElement('article'); card.className = 'scenario'; card.formulas = s.formulas || [];
   const numeric = [['upfront','Upfront cost (₹)','One-time spending before the scenario begins, such as setup or equipment.'],['monthly_cost','Monthly operating cost (₹)','Recurring spending from month 1, including salaries, rent and services.'],['monthly_revenue','Monthly revenue after launch (₹)','Expected additional monthly income, starting in the first revenue month.'],['launch_month','First revenue month','The month income starts. Month 1 is the beginning of your planning period.'],['team_required','People required','People from your available team needed to carry out this scenario.']];
   card.innerHTML = `<div class="scenario-top"><span class="eyebrow">Scenario assumptions</span><button type="button" class="remove">Remove</button></div><div class="fields"><label class="wide">Scenario title<input data-field="title" required maxlength="100" value="${escape(s.title)}"></label><label class="wide">The approach<textarea data-field="description" required maxlength="4000">${escape(s.description)}</textarea></label>${numeric.map(([key,label]) => `<label>${label}<input data-field="${key}" type="number" required min="${key === 'launch_month' ? '1' : '0'}" max="${key === 'launch_month' ? '60' : key === 'team_required' ? '1000000' : '1000000000000'}" step="${key === 'launch_month' || key === 'team_required' ? '1' : 'any'}" value="${escape(s[key])}"></label>`).join('')}<label class="wide">Assumptions & trade-offs<textarea data-field="assumptions" maxlength="4000">${escape(s.assumptions)}</textarea></label></div>`;
   card.querySelector('.eyebrow').classList.add('scenario-number');
@@ -182,6 +184,7 @@ form.onsubmit = event => {
   run(async () => { if(!payload.scenarios.length) throw new Error('Add at least one scenario to calculate.');
     const data = await api('simulate', payload);
     results.innerHTML = `<p class="hint">${escape(data.sensitivity)}</p><div class="recommendation"><span class="eyebrow">Comparison insight</span><p>${escape(data.recommendation)}</p></div><div class="result-grid">${data.results.map(r => `<article class="result"><span class="badge ${r.feasible?'':'bad'}">${r.feasible?'Within numeric limits':'Outside numeric limits'}</span><h3>${escape(r.title)}</h3><div class="value">${escape(r.net)}</div><div class="note">Net contribution over the horizon</div><dl><dt>Peak cash required</dt><dd>${escape(r.funding)}</dd><dt>Cash headroom at peak spend</dt><dd>${escape(r.cash_left)}</dd><dt>Total incremental revenue</dt><dd>${escape(r.revenue)}</dd><dt>Cash recovery</dt><dd>${escape(r.recovery)}</dd></dl>${r.issues.map(issue=>`<p class="note bad">${escape(issue)}</p>`).join('')}<details><summary>Assumptions & monthly cash flow</summary><p>${escape(r.assumptions || 'No additional assumptions recorded.')}</p><div class="table-wrap"><table><thead><tr><th>Month</th><th>Cumulative cash</th></tr></thead><tbody>${r.timeline.map(row=>`<tr><td>${escape(row.month)}</td><td>${escape(row.balance)}</td></tr>`).join('')}</tbody></table></div></details></article>`).join('')}</div><details><summary>How these results are calculated</summary><p>${escape(data.method)}</p></details>`;
+    results.querySelectorAll('.result').forEach((card,index)=>{const calculations=data.results[index].calculations || [];if(calculations.length){const block=document.createElement('details');block.innerHTML='<summary>AI-defined formulas · calculated in Python</summary>'+calculations.map(c=>'<p><b>'+escape(c.name)+': '+escape(c.error || c.display)+'</b><br><code>'+escape(c.expression)+'</code><br>'+escape(c.explanation)+'</p>').join('');card.append(block);}});
     results.scrollIntoView({behavior:'smooth',block:'start'});
   });
 };

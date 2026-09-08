@@ -12,5 +12,5 @@ restore exact normal layout. Other browsers retain individual entry animations.
 Reduced-motion users navigate without animation. Network loading is outside the
 animation duration. Direct visits do not animate.
 
-Business uses this source; future domains can use the same hooks. Life links to
-the dashboard because no Life page exists yet.
+Business, Finance, Life and Pricing use this source. Domain links share the same
+entry animation; dashboard cards use the navigation helper directly.

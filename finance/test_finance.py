@@ -1,5 +1,6 @@
 import json
 import unittest
+import tempfile
 from unittest.mock import patch
 
 from fastapi import HTTPException
@@ -10,6 +11,8 @@ from finance.finance import Goal, grounded_report, snapshot
 
 class FinanceTests(unittest.TestCase):
     def setUp(self):
+        temp = tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup)
+        env = patch.dict('os.environ', {'DFLOW_DATA_DIR': temp.name}); env.start(); self.addCleanup(env.stop)
         self.goal = Goal(focus='Purchase', thoughts='Should I buy a car or keep using transit?',
                          location='Pune, India', timeline='Six months', income=80000, spending=40000,
                          savings=600000, reserve=300000, budget=800000)
@@ -44,11 +47,14 @@ class FinanceTests(unittest.TestCase):
                 r = client.post('/api/finance/organize', json=self.goal.model_dump())
                 self.assertEqual(r.status_code, 200)
                 self.assertEqual(r.json()['outline']['questions'], outline['questions'])
-            with patch('finance.finance.generate', return_value=(self.text, self.metadata)) as provider:
+            formula = json.dumps({'formulas': [{'name': 'Monthly balance', 'expression': 'income-spending', 'unit': 'INR', 'explanation': 'Income less spending.'}], 'missing_information': []})
+            with patch('finance.finance.generate', side_effect=[(self.text, self.metadata), (formula, {}), (self.text, self.metadata)]) as provider:
                 r = client.post('/api/finance/research', json=self.goal.model_dump())
                 self.assertEqual(r.status_code, 200)
-                self.assertEqual(provider.call_count, 2)
-                self.assertTrue(all(call.kwargs['search'] for call in provider.call_args_list))
+                self.assertEqual(provider.call_count, 3)
+                self.assertTrue(provider.call_args_list[0].kwargs['search'])
+                self.assertTrue(provider.call_args_list[2].kwargs['search'])
+                self.assertEqual(r.json()['calculations'][0]['value'], 40000)
 
     def test_missing_key_and_routes(self):
         with TestClient(app) as client, patch.dict('os.environ', {}, clear=True):

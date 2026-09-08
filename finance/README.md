@@ -27,8 +27,10 @@ Sources and supported excerpts are linked; search suggestions render in a sandbo
 iframe with scripts disabled. User/provider text is escaped, not executed.
 
 Optional INR monthly balance and savings-above-reserve calculations run in Python.
-Unknown numbers remain unknown. No automated trades or purchases, persistent drafts,
-or research-result cache. Without credentials, money snapshots remain usable;
+AI-defined formulas are also validated and evaluated in Python before the final report.
+Submitted input variables are retained in separate local JSON files and read back for
+agent requests; see `AGENT_PIPELINE.md`. Unknown numbers remain unknown. There are no
+automated trades or purchases, draft restoration, or research-result cache. Without credentials, money snapshots remain usable;
 AI calls clearly report that the agent is not connected.
 
 Tests: `python -m unittest finance.test_finance business.test_business`.

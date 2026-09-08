@@ -27,8 +27,9 @@ charges upfront spending at month 0, operating costs every month, and revenue fr
 the launch month. Required cash is the peak cumulative deficit. Recovery is the
 first month from which cumulative cash remains nonnegative through the horizon.
 Text constraints and qualitative assumptions need review; cash/team/launch limits
-are checked automatically. Values are INR. No persistence is implemented; refreshing
-starts a new workspace. API documentation is available at `/docs`.
+are checked automatically. Values are INR. Submitted inputs are saved as separate
+local JSON files and read back for agent requests; see `AGENT_PIPELINE.md`. Refreshing
+starts a new workspace without restoring saved inputs. API documentation is at `/docs`.
 
 Install test dependencies with `python -m pip install -r requirements-dev.txt`.
 Run backend checks: `python -m unittest discover -s business -t . -p "test_*.py"`.

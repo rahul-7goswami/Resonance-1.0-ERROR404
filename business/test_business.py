@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 from unittest.mock import patch
 from fastapi.testclient import TestClient
 from business.business import app, Brief, Scenario, Simulation, simulate, money
@@ -12,6 +13,8 @@ class BusinessTests(unittest.TestCase):
             self.assertEqual(money(value), expected)
 
     def setUp(self):
+        temp = tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup)
+        env = patch.dict('os.environ', {'DFLOW_DATA_DIR': temp.name}); env.start(); self.addCleanup(env.stop)
         self.brief = Brief(business="Software company", goal="Test expansion", budget=100, team=2, months=3)
         self.scenario = Scenario(title="Pilot", description="Small pilot", upfront=50, monthly_cost=20,
                                  monthly_revenue=60, launch_month=2, team_required=1)

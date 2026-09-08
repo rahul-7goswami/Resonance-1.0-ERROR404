@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Personal finance · D-Flow</title>
+    <title>Life decisions · D-Flow</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
@@ -572,131 +572,37 @@
 <script src="/theme.js"></script>
 </head>
 
-<body
-    data-transition-elements=".brand,.domains a,aside>p,aside nav a,.intro .eyebrow,.intro h1,.intro p,.orb,#goal>.step,#goal>h2,.focus-options button,#goal>.grid>label,#goal>.actions>*">
-    <div class="grain-overlay" aria-hidden="true"></div>
-    <header><a class="brand" href="/hero.html#options">D-Flow</a>
-        <nav class="domains" aria-label="Domains"><a href="/hero.html#options">Dashboard</a><span>|</span><a
-                href="/business/business.html" data-domain-link>Business</a><span>|</span><a
-                href="/life/life.html">Life</a><span>|</span><a href="/pricing.html">Pricing</a></nav>
-    </header>
-    <div class="shell">
-        <aside>
-            <p>YOUR WORKSPACE</p>
-            <nav aria-label="Finance steps"><a href="#goal"><b>01</b>What's on your mind</a><a
-                    href="#clarify"><b>02</b>Find your focus</a><a href="#research"><b>03</b>Make an informed move</a>
-            </nav>
-            <p class="aside-note">Your money.<br>Your priorities.<br>A clearer way forward.<br><br>Personal finance /
-                D-Flow</p>
-        </aside>
-        <main>
-            <div class="intro">
-                <div><span class="eyebrow">Personal finance</span>
-                    <h1>Make room for what matters.</h1>
-                    <p>A purchase you're considering. Savings you're building. A decision you can't quite untangle.
-                        Start with your thoughts—we'll help you find the focus.</p>
-                </div>
-                <div class="orb" aria-hidden="true"></div>
-            </div>
-            <div id="message" role="status" aria-live="polite"></div>
-            <form id="finance-form">
-                <section id="goal"><span class="step">01 / YOUR STARTING POINT</span>
-                    <h2>What are you thinking about?</h2>
-                    <div class="focus-options" role="group" aria-label="Personal finance focus"><button type="button"
-                            class="chip" data-focus="Purchase" aria-pressed="true">Purchase</button><button
-                            type="button" class="chip" data-focus="Invest or liquidate" aria-pressed="false">Invest or
-                            liquidate</button><button type="button" class="chip" data-focus="Savings"
-                            aria-pressed="false">Savings</button><button type="button" class="chip"
-                            data-focus="Everyday money" aria-pressed="false">Everyday money</button><button
-                            type="button" class="chip" data-focus="Something else" aria-pressed="false">Something
-                            else</button></div>
-                    <div class="grid"><label class="wide">Your thoughts & goal<textarea class="thoughts" name="thoughts"
-                                required maxlength="6000"
-                                placeholder="I'm thinking of buying a car, but I'm unsure whether to buy now or save for another year. I commute daily and need something practical for my family…"></textarea><span
-                                class="note">Write naturally. Include what you want, what worries you, and any options
-                                already on your mind.</span></label>
-                        <label>Your location<input name="location" required maxlength="200"
-                                placeholder="City and country, e.g. Pune, India"><span class="note">So the research
-                                reflects local options and rules.</span></label><label>When would you like to
-                            decide?<input name="timeline" required maxlength="6000"
-                                placeholder="In six months, or still exploring"></label>
-                        <label class="wide">What matters most to you?<textarea name="priorities" maxlength="4000"
-                                placeholder="Family needs, commute, flexibility, peace of mind, avoiding debt, keeping savings accessible…"></textarea></label>
-                    </div>
-                    <details class="disclosure">
-                        <summary>Your money picture · optional</summary>
-                        <p class="note">Approximate figures are enough. Leave anything unknown blank. Amounts are in
-                            rupees.</p>
-                        <div class="grid"><label>Monthly take-home income (₹)<input name="income" type="number" min="0"
-                                    max="1000000000000" step="any" placeholder="After tax"></label><label>Monthly
-                                spending (₹)<input name="spending" type="number" min="0" max="1000000000000" step="any"
-                                    placeholder="Include bills and loan payments"></label><label>Available savings
-                                (₹)<input name="savings" type="number" min="0" max="1000000000000"
-                                    step="any"></label><label>Savings to keep untouched (₹)<input name="reserve"
-                                    type="number" min="0" max="1000000000000" step="any"
-                                    placeholder="Your chosen safety buffer"></label><label>Spending limit for this goal
-                                (₹)<input name="budget" type="number" min="0" max="1000000000000" step="any"></label>
-                        </div><button type="button" class="btn" id="snapshot-btn" style="margin-top:16px">See my money
-                            picture</button>
-                        <div id="snapshot" class="facts" aria-live="polite"></div>
-                    </details>
-                    <div class="actions"><button type="submit" class="btn primary">Help me find my focus →</button><span
-                            class="note" id="agent-status">Connecting…</span></div>
-                    <p class="note" style="margin-top:12px">AI actions share your entered goal and optional figures with
-                        the connected research service.</p>
-                </section>
-                <section id="clarify"><span class="step">02 / A LITTLE CLARITY</span>
-                    <h2>Turn your thoughts into a direction.</h2>
-                    <div id="outline">
-                        <div class="empty">
-                            <h3>You don't need a perfect brief.</h3>
-                            <p>The agent will organize your thoughts, identify your priorities, and ask about the
-                                details that matter.</p>
-                        </div>
-                    </div>
-                    <div id="followup" hidden>
-                        <div id="questions" class="questions"></div>
-                        <div class="actions"><button type="submit" class="btn">Refine my focus</button><button
-                                type="button" class="btn primary" id="research-btn">Research my options →</button></div>
-                        <p class="note" style="margin-top:12px">Research compares options, then checks drawbacks and
-                            conflicting evidence. It can take a few minutes.</p>
-                    </div>
-                </section>
-                <section id="research"><span class="step">03 / A WELL-INFORMED NEXT STEP</span>
-                    <h2>A conclusion you can understand.</h2>
-                    <div id="report">
-                        <div class="empty">
-                            <h3>Evidence before a decision.</h3>
-                            <p>Your researched conclusion, alternatives, trade-offs and linked sources will appear here.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-            </form>
-            <footer>D-Flow · Personal finance / Submitted inputs are saved locally; this page resets on refresh.</footer>
-        </main>
-    </div>
-    <script>
-        const form = document.querySelector('#finance-form'), message = document.querySelector('#message');
-        let focus = 'Purchase', busy = false, questions = [], previousAnswers = '';
-        const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-        const safeUrl = url => { try { const u = new URL(url); return u.protocol === 'https:' ? u.href : '#'; } catch { return '#'; } };
-        function data() { const p = { focus }; for (const name of ['thoughts', 'location', 'timeline', 'priorities']) p[name] = form.elements[name].value; for (const name of ['income', 'spending', 'savings', 'reserve', 'budget']) p[name] = form.elements[name].value || null; p.answers = previousAnswers + '\n' + [...document.querySelectorAll('[data-answer]')].filter(input => input.value.trim()).map(input => input.dataset.question + '\n' + input.value).join('\n\n'); return p; }
-        async function api(route, payload) { const r = await fetch('/api/finance/' + route, payload === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const result = await r.json(); if (!r.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Please check your goal and financial inputs.'); return result; }
-        async function task(label, action) { if (busy) return; busy = true; message.textContent = label; const controls = [...form.querySelectorAll('input,textarea,button')]; controls.forEach(x => x.disabled = true); try { await action(); message.textContent = ''; } catch (e) { message.textContent = e.message === 'Failed to fetch' ? 'Cannot reach the server. Please try again.' : e.message; message.scrollIntoView({ block: 'nearest' }); } finally { controls.forEach(x => x.disabled = false); busy = false; } }
-        function facts(items) { return items.map(item => `<div class="fact"><span class="note">${esc(item.label)}</span><strong>${esc(item.value)}</strong><p class="note">${esc(item.note)}</p></div>`).join(''); }
-        function invalidate() { document.querySelector('#report').innerHTML = '<p class="hint">Your goal has changed. Run research again for an updated conclusion.</p>'; }
-        form.addEventListener('input', invalidate);
-        document.querySelectorAll('[data-focus]').forEach(button => button.onclick = () => { focus = button.dataset.focus; document.querySelectorAll('[data-focus]').forEach(b => b.setAttribute('aria-pressed', String(b === button))); invalidate(); });
-        document.querySelectorAll('[data-domain-link]').forEach(a => a.onclick = e => { if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return; e.preventDefault(); DFlowTransition.navigate(a.href); });
-        document.querySelector('#snapshot-btn').onclick = () => { if (!form.reportValidity()) return; const payload = data(); task('Calculating your money picture…', async () => { const r = await api('snapshot', payload); document.querySelector('#snapshot').innerHTML = facts(r.items) || '<p class="note">Enter income and spending, savings and reserve, or a spending limit to see a summary.</p>'; }); };
-        form.onsubmit = e => { e.preventDefault(); const payload = data(); task('Organizing your thoughts and identifying what matters…', async () => { const r = await api('organize', payload), o = r.outline; previousAnswers = payload.answers; questions = o.questions; document.querySelector('#outline').innerHTML = `<div class="panel"><h3>${esc(o.title)}</h3><p>${esc(o.understanding)}</p><ul>${o.priorities.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div><div class="panel"><h3>What we'll investigate</h3><ol>${o.research_plan.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`; document.querySelector('#snapshot').innerHTML = facts(r.snapshot); document.querySelector('#questions').innerHTML = questions.map((q, i) => `<label><span>${i + 1}. ${esc(q)}</span><textarea data-answer data-question="${esc(q)}" maxlength="1600" placeholder="Add what you know, or explain what you're unsure about."></textarea></label>`).join(''); document.querySelector('#followup').hidden = false; document.querySelector('#clarify').scrollIntoView({ block: 'start' }); }); };
-        function formulaBlock(r){return '<div class="panel"><h3>Formulas created for your goal</h3>'+((r.calculations||[]).map(c=>'<p><strong>'+esc(c.name)+': '+esc(c.error || c.display)+'</strong><br><code>'+esc(c.expression)+'</code><br>'+esc(c.explanation)+'</p>').join('') || '<p>No additional formula could be calculated from the available inputs.</p>')+(r.missing_information||[]).map(x=>'<p class="note">Needed: '+esc(x)+'</p>').join('')+'</div>';}
+<body data-transition-elements=".brand,.domains a,aside>p,aside nav a,.intro .eyebrow,.intro h1,.intro p,.orb,#goal>.step,#goal>h2,.focus-options button,#goal>.grid>label,#goal>.actions>*">
+<div class="grain-overlay" aria-hidden="true"></div>
+<header><a class="brand" href="/hero.html#options">D-Flow</a><nav class="domains" aria-label="Domains"><a href="/hero.html#options">Dashboard</a><span>|</span><a href="/business/business.html" data-domain-link>Business</a><span>|</span><a href="/finance/finance.html" data-domain-link>Finance</a><span>|</span><a href="/life/life.html" aria-current="page">Life</a><span>|</span><a href="/pricing.html" data-domain-link>Pricing</a></nav></header>
+<div class="shell"><aside><p>YOUR WORKSPACE</p><nav aria-label="Life steps"><a href="#goal"><b>01</b>What's on your mind</a><a href="#clarify"><b>02</b>Understand your direction</a><a href="#research"><b>03</b>Explore what fits</a></nav><p class="aside-note">Your interests.<br>Your values.<br>Your next chapter.<br><br>Life / D-Flow</p></aside>
+<main><div class="intro"><div><span class="eyebrow">Life decisions</span><h1>Find a direction that feels like you.</h1><p>Choosing a college. Exploring a career. Starting a new chapter. Put your thoughts into words, and explore the possibilities with a little perspective.</p></div><div class="orb" aria-hidden="true"></div></div>
+<div id="message" role="status" aria-live="polite"></div><form id="life-form">
+<section id="goal"><span class="step">01 / YOUR NEXT CHAPTER</span><h2>What's the choice in front of you?</h2>
+<div class="focus-options" role="group" aria-label="Life focus"><button type="button" class="chip" data-focus="College & education" aria-pressed="true">College & education</button><button type="button" class="chip" data-focus="Career direction" aria-pressed="false">Career direction</button><button type="button" class="chip" data-focus="A new chapter" aria-pressed="false">A new chapter</button><button type="button" class="chip" data-focus="A significant choice" aria-pressed="false">A significant choice</button></div>
+<div class="grid"><label class="wide">Your thoughts & the decision<textarea class="thoughts" name="thoughts" required maxlength="6000" placeholder="I'm choosing between two colleges. One has a course I love, while the other feels like a better environment. I'm not sure which matters more to me…"></textarea><span class="note">Share the options, the uncertainty, and what you hope might change.</span></label>
+<label class="wide">Your interests, strengths & values<textarea name="values" maxlength="6000" placeholder="What energizes you? What kind of learning, work or daily life brings out your best?"></textarea></label>
+<label class="wide">What should we understand about your situation?<textarea name="context" maxlength="6000" placeholder="Your experience, responsibilities, preferred environment, support system, and anything you don't want to compromise on."></textarea></label>
+<label>Location or places you're considering<input name="location" maxlength="200" placeholder="Optional: cities, countries or institutions"></label><label>When do you need to decide?<input name="timeline" required maxlength="6000" placeholder="This admission cycle, this year, or just exploring"></label></div>
+<div class="actions"><button type="submit" class="btn primary">Help me understand my direction →</button><span class="note" id="agent-status">Connecting…</span></div><p class="note" style="margin-top:12px">AI actions save your inputs as a local JSON file and share them with the connected agent.</p></section>
+<section id="clarify"><span class="step">02 / WHAT MATTERS TO YOU</span><h2>Make sense of the possibilities.</h2><div id="outline"><div class="empty"><h3>There is room for uncertainty.</h3><p>The agent will reflect your priorities and ask questions that help you see your choices more clearly.</p></div></div><div id="followup" hidden><div id="questions" class="questions"></div><div class="actions"><button type="submit" class="btn">Refine my direction</button><button type="button" class="btn primary" id="research-btn">Research experiences & possibilities →</button></div></div></section>
+<section id="research"><span class="step">03 / PERSPECTIVE, NOT PRESSURE</span><h2>Suggestions worth exploring.</h2><div id="report"><div class="empty"><h3>Learn from evidence and experience.</h3><p>Explore comparable situations, what makes yours different, and small next steps to test what fits.</p></div></div></section></form>
+<footer>D-Flow · Life / Submitted inputs are saved locally; this page's draft resets on refresh.</footer></main></div>
+<script>
+const form=document.querySelector('#life-form'),message=document.querySelector('#message');
+let focus='College & education',busy=false,questions=[],previousAnswers='';
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl=url=>{try{const u=new URL(url);return u.protocol==='https:'?u.href:'#';}catch{return '#';}};
+function data(){const p={focus};for(const name of ['thoughts','values','context','location','timeline'])p[name]=form.elements[name].value;p.answers=previousAnswers+'\n'+[...document.querySelectorAll('[data-answer]')].filter(x=>x.value.trim()).map(x=>x.dataset.question+'\n'+x.value).join('\n\n');return p;}
+async function api(route,payload){const r=await fetch('/api/life/'+route,payload===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok)throw new Error(typeof result.detail==='string'?result.detail:'Please check your inputs.');return result;}
+async function task(label,action){if(busy)return;busy=true;message.textContent=label;const controls=[...form.querySelectorAll('input,textarea,button')];controls.forEach(x=>x.disabled=true);try{await action();message.textContent='';}catch(e){message.textContent=e.message==='Failed to fetch'?'Cannot reach the server. Please retry.':e.message;message.scrollIntoView({block:'nearest'});}finally{controls.forEach(x=>x.disabled=false);busy=false;}}
+function invalidate(){document.querySelector('#report').innerHTML='<p class="hint">Your direction has changed. Research again for updated suggestions.</p>';}
+form.addEventListener('input',invalidate);
+document.querySelectorAll('[data-focus]').forEach(button=>button.onclick=()=>{focus=button.dataset.focus;document.querySelectorAll('[data-focus]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));invalidate();});
+document.querySelectorAll('[data-domain-link]').forEach(a=>a.onclick=e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();DFlowTransition.navigate(a.href);});
+form.onsubmit=e=>{e.preventDefault();const payload=data();task('Understanding your situation and shaping follow-up questions…',async()=>{const r=await api('organize',payload),o=r.outline;previousAnswers=payload.answers;questions=o.questions;document.querySelector('#outline').innerHTML='<div class="panel"><h3>'+esc(o.title)+'</h3><p>'+esc(o.understanding)+'</p><ul>'+o.priorities.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div><div class="panel"><h3>What we will explore</h3><ol>'+o.research_plan.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol></div>';document.querySelector('#questions').innerHTML=questions.map((q,i)=>'<label><span>'+esc(i+1)+'. '+esc(q)+'</span><textarea data-answer data-question="'+esc(q)+'" maxlength="1600" placeholder="Share what you know, or what you are unsure about."></textarea></label>').join('');document.querySelector('#followup').hidden=false;document.querySelector('#clarify').scrollIntoView({block:'start'});});};
 function reportBlock(r) { return `<div class="report">${esc(r.text)}</div><h3 style="margin-top:24px">Sources</h3><ol class="sources">${r.sources.map(s => `<li><a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a></li>`).join('')}</ol><details class="disclosure"><summary>Evidence linked to specific claims</summary>${r.evidence.map(e => `<div class="evidence"><p>${esc(e.text)}</p>${e.source_ids.map(id => { const s = r.sources.find(x => x.id === id); return s ? `<a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer">[${esc(id)}] ${esc(s.title)}</a> ` : ''; }).join('')}</div>`).join('')}</details><details class="disclosure"><summary>Searches performed</summary><ul style="padding-left:20px">${r.queries.map(q => `<li>${esc(q)}</li>`).join('')}</ul></details>`; }
         function suggestions(container, r) { if (!r.search_suggestions) return; const frame = document.createElement('iframe'); frame.className = 'suggestions'; frame.title = 'Google Search suggestions'; frame.setAttribute('sandbox', 'allow-popups allow-popups-to-escape-sandbox'); frame.srcdoc = r.search_suggestions; container.append(frame); }
-        document.querySelector('#research-btn').onclick = () => { if (!form.reportValidity()) return; const payload = data(); task('Researching options, then checking evidence and trade-offs. This may take a few minutes…', async () => { const r = await api('research', payload), target = document.querySelector('#report'); target.innerHTML = `<p class="hint">Researched ${esc(r.date)} · Discovery + verification</p><div class="facts">${facts(r.snapshot)}</div>${formulaBlock(r)}${reportBlock(r.conclusion)}<details class="disclosure"><summary>First-pass research notes</summary><div id="discovery">${reportBlock(r.discovery)}</div></details><p class="note" style="margin-top:20px">${esc(r.note)}</p>`; suggestions(target, r.conclusion); suggestions(target.querySelector('#discovery'), r.discovery); document.querySelector('#research').scrollIntoView({ block: 'start' }); }); };
-        api('status').then(r => document.querySelector('#agent-status').textContent = r.configured ? 'Your research agent is connected' : 'Research agent not connected yet').catch(() => document.querySelector('#agent-status').textContent = 'Open this page through the D-Flow server');
-    </script>
-</body>
-
-</html>
+document.querySelector('#research-btn').onclick=()=>{if(!form.reportValidity())return;const payload=data();task('Researching comparable experiences, then checking differences and evidence. This may take a few minutes…',async()=>{const r=await api('research',payload),target=document.querySelector('#report');target.innerHTML='<p class="hint">Researched '+esc(r.date)+' · Discovery + verification</p>'+reportBlock(r.conclusion)+'<details class="disclosure"><summary>Comparable cases and initial research</summary><div id="discovery">'+reportBlock(r.discovery)+'</div></details><p class="note" style="margin-top:20px">'+esc(r.note)+'</p>';suggestions(target,r.conclusion);suggestions(target.querySelector('#discovery'),r.discovery);document.querySelector('#research').scrollIntoView({block:'start'});});};
+api('status').then(r=>document.querySelector('#agent-status').textContent=r.configured?'Your agent is connected':'Agent not connected yet').catch(()=>document.querySelector('#agent-status').textContent='Open this page through the D-Flow server');
+</script></body></html>

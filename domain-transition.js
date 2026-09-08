@@ -27,6 +27,12 @@
   window.DFlowTransition={navigate,enter,duration:1200};
   addEventListener('pageshow',()=>{navigating=false;});
   document.addEventListener('DOMContentLoaded',()=>{
+    document.addEventListener('click',event=>{
+      const anchor=event.target.closest('a[href]');
+      if(!anchor || event.defaultPrevented || event.button!==0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || anchor.target==='_blank')return;
+      const url=new URL(anchor.href,location.href);
+      if(url.origin===location.origin && /\/(business|finance|life|pricing)(\/|\.|$)/.test(url.pathname) && url.pathname!==location.pathname){event.preventDefault();navigate(url.href);}
+    });
     let entry;
     try {entry=JSON.parse(sessionStorage.getItem(KEY));sessionStorage.removeItem(KEY);} catch {}
     if(entry?.path===location.pathname && Date.now()-entry.time<15000) enter();
