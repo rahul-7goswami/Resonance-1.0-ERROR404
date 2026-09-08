@@ -194,7 +194,7 @@ body {
   font-size: clamp(3.5rem, 7vw, 6.5rem);
   font-weight: 700;
   letter-spacing: -0.04em;
-  color: #ffffff;
+  color: #000000;
   will-change: transform, opacity;
 }
 

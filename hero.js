@@ -45,6 +45,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 700);
   }
 
+  // Squarcle navigation bridging
+  const squarcleCards = document.querySelectorAll(".squarcle-card");
+  squarcleCards.forEach((card) => {
+    const page = card.getAttribute("data-page");
+    const href = card.getAttribute("data-href");
+
+    if (page === "Business" || href) {
+      const destination = href || "business/business.html";
+      card.addEventListener("click", () => {
+        window.location.href = destination;
+      });
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          window.location.href = destination;
+        }
+      });
+    }
+  });
+
   // =========================================================
   // Cinematic Scroll Animation Engine
   // =========================================================
